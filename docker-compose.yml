@@ -1,0 +1,95 @@
+services:
+  # --- PRODUCTION/DEV INFRASTRUCTURE ---
+  db:
+    image: postgres:15
+    container_name: emanuel_pizzeria_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./backend
+      target: production
+    container_name: emanuel_pizzeria_api
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/alembic:/app/alembic
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - ENABLE_RATE_LIMIT=False
+    restart: always
+
+  # --- TEST INFRASTRUCTURE (Profile: test) ---
+  db-test:
+    image: postgres:15
+    container_name: emanuel_pizzeria_db_test
+    profiles: ["test"]
+    tmpfs: 
+      - /var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_password
+      - POSTGRES_DB=test_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_db"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  tests:
+    build:
+      context: ./backend
+      target: development
+    container_name: emanuel_pizzeria_test_runner
+    profiles: ["test"]
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+    depends_on:
+      db-test:
+        condition: service_healthy
+    environment:
+      - SECRET_KEY=test_secret_key_fixed_for_all_tests
+      - ALGORITHM=HS256
+      - DATABASE_URL=postgresql+psycopg://test_user:test_password@db-test:5432/test_db
+    command: pytest -v --color=yes
+
+  # --- LOAD TESTING (Profile: load) ---
+  load-tests:
+    build:
+      context: ./backend
+      target: development
+    profiles: ["load"]
+    container_name: emanuel_pizzeria_locust_runner
+    depends_on:
+      - backend
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+    ports:
+      - "8089:8089"
+    environment:
+      - ENABLE_RATE_LIMIT=${ENABLE_RATE_LIMIT}
+    command: locust -f tests/locustfile.py --host http://backend:8001
+
+volumes:
+  postgres_data:
