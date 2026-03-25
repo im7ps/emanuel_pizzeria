@@ -5,6 +5,7 @@ class AppTheme {
   static const Color background = Color(0xFFFDF5E6); // Old Lace
   static const Color accent = Color(0xFFC04000); // Terracotta
   static const Color secondary = Color(0xFF556B2F); // Olive Green
+  static const Color gold = Color(0xFFC5A021); // Gold/Brass
   static const Color text = Color(0xFF2F2F2F); // Anthracite
   static const Color cardBg = Color(0xFFF4F1E8); // Lighter Olive/Stone
 
@@ -16,13 +17,14 @@ class AppTheme {
         seedColor: accent,
         primary: accent,
         secondary: secondary,
+        tertiary: gold,
         surface: background,
         onSurface: text,
       ),
       textTheme: TextTheme(
         displayLarge: GoogleFonts.playfairDisplay(
           fontSize: 48,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.normal,
           color: accent,
           letterSpacing: -1,
         ),

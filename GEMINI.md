@@ -17,10 +17,12 @@ Questo file definisce il contesto globale e le direttive architetturali per l'in
     *   **Dependency Injection:** Sfrutta il sistema di DI nativo di FastAPI (in `api/v1/deps.py`) per iniettare Service e Repository.
 3.  **API Contract First:**
     *   Sfrutta l'integrazione nativa OpenAPI/Swagger di FastAPI.
-    *   Il versionamento è obbligatorio fin dal day zero (es. `/api/v1/...`).
-    *   Gli schemi di request/response (Pydantic V2) devono essere definiti rigorosamente prima o contestualmente all'implementazione della logica.
+    * Il versionamento è obbligatorio fin dal day zero (es. `/api/v1/...`).
+    * Gli schemi di request/response (Pydantic V2) devono essere definiti rigorosamente prima o contestualmente all'implementazione della logica.
+    4.  **Sincronizzazione Modelli (Tracking):**
+    * È obbligatorio aggiornare `FE_BE_TRACKING.md` non appena viene definita un'entità su uno dei due layer (FE/BE), indicando lo stato di sincronizzazione.
 
-## 🔐 Sicurezza e Scalabilità
+    ## 🔐 Sicurezza e Scalabilità
 
 1.  **Autenticazione & Autorizzazione:**
     *   Usa JWT (JSON Web Tokens) gestiti tramite `python-jose` e hashing delle password con `passlib` (bcrypt).
