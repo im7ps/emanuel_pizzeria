@@ -21,7 +21,7 @@ class Footer extends StatelessWidget {
         vertical: isMobile ? 60 : 80,
         horizontal: isMobile ? 24 : 40,
       ),
-      color: AppTheme.background,
+      color: Colors.white,
       width: double.infinity,
       child: Column(
         children: [
@@ -42,7 +42,9 @@ class Footer extends StatelessWidget {
                   children: [
                     FittedBox(
                       fit: BoxFit.scaleDown,
-                      alignment: isDesktop && !isTablet ? Alignment.centerLeft : Alignment.center,
+                      alignment: isDesktop && !isTablet
+                          ? Alignment.centerLeft
+                          : Alignment.center,
                       child: Text(
                         "EMANUEL PIZZERIA",
                         style: GoogleFonts.playfairDisplay(
@@ -56,7 +58,8 @@ class Footer extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       "Passione del Sud, direttamente\nnel tuo piatto.",
-                      textAlign: !useColumn ? TextAlign.start : TextAlign.center,
+                      textAlign:
+                          !useColumn ? TextAlign.start : TextAlign.center,
                       style: GoogleFonts.merriweather(
                         color: AppTheme.text.withValues(alpha: 0.6),
                         fontSize: isMobile ? 12 : 13,
@@ -96,10 +99,17 @@ class Footer extends StatelessWidget {
                   fontSize: isMobile ? 16 : 18,
                   children: [
                     _FooterHourRow(
-                        day: "Lun - Gio", hours: "19:00 - 23:30", isMobile: isMobile),
+                        day: "Lun - Gio",
+                        hours: "19:00 - 23:30",
+                        isMobile: isMobile),
                     _FooterHourRow(
-                        day: "Ven - Sab", hours: "19:00 - 00:30", isMobile: isMobile),
-                    _FooterHourRow(day: "Domenica", hours: "19:00 - 23:30", isMobile: isMobile),
+                        day: "Ven - Sab",
+                        hours: "19:00 - 00:30",
+                        isMobile: isMobile),
+                    _FooterHourRow(
+                        day: "Domenica",
+                        hours: "19:00 - 23:30",
+                        isMobile: isMobile),
                   ],
                 ),
               ),
@@ -166,7 +176,8 @@ class _FooterSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment:
+          isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         if (title != null) ...[
           FittedBox(
@@ -189,13 +200,13 @@ class _FooterSection extends StatelessWidget {
   }
 }
 
-
 class _FooterHourRow extends StatelessWidget {
   final String day;
   final String hours;
   final bool isMobile;
 
-  const _FooterHourRow({required this.day, required this.hours, required this.isMobile});
+  const _FooterHourRow(
+      {required this.day, required this.hours, required this.isMobile});
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +242,8 @@ class _FooterContactRow extends StatelessWidget {
   final String label;
   final bool isMobile;
 
-  const _FooterContactRow({required this.icon, required this.label, required this.isMobile});
+  const _FooterContactRow(
+      {required this.icon, required this.label, required this.isMobile});
 
   @override
   Widget build(BuildContext context) {
@@ -257,4 +269,3 @@ class _FooterContactRow extends StatelessWidget {
     );
   }
 }
-

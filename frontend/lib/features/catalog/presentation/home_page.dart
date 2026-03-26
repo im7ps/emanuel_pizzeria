@@ -71,9 +71,9 @@ class _HomePageState extends State<HomePage> {
             StorytellingSection(),
             MapSection(),
             Footer(),
-            ],
-            ),
-            ),
+          ],
+        ),
+      ),
       floatingActionButton: _showBackToTop
           ? FloatingActionButton(
               onPressed: _scrollToTop,

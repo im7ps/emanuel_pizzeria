@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import '../theme.dart';
 
 class Navbar extends StatelessWidget implements PreferredSizeWidget {
   const Navbar({super.key});
@@ -30,7 +29,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
         title: Text(
           "EMANUEL",
           style: GoogleFonts.playfairDisplay(
-            color: AppTheme.gold, // Colore dorato come richiesto
+            color: Colors.white, // Colore dorato come richiesto
             fontWeight: FontWeight.w900,
             fontSize: isMobile ? 24 : 28,
             letterSpacing: 2,

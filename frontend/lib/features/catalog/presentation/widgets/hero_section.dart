@@ -41,7 +41,9 @@ class HeroSection extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxWidth: isMobile ? 260 : 550, // Ridotto da 320 a 260 per mobile
+                        maxWidth: isMobile
+                            ? 260
+                            : 550, // Ridotto da 320 a 260 per mobile
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -49,7 +51,6 @@ class HeroSection extends StatelessWidget {
                           // Titolo Tipografico a "Quadrato"
                           const _SquareTitle(
                             lines: ["GUSTO", "AUTENTICO", "DEL SUD"],
-                            color: AppTheme.gold,
                           ),
                           const SizedBox(height: 24),
                           // Linea sottile di accento
@@ -62,11 +63,11 @@ class HeroSection extends StatelessWidget {
                           Text(
                             "LA TRADIZIONE PROFUMA DI CASA",
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.playfairDisplay(
+                            style: GoogleFonts.cinzel(
                               color: Colors.white,
                               fontSize: isMobile ? 16 : 22,
                               fontWeight: FontWeight.w600,
-                              letterSpacing: 6,
+                              letterSpacing: 2, // Ridotto per maggiore densità
                               shadows: [
                                 Shadow(
                                   color: Colors.black.withValues(alpha: 0.5),
@@ -125,11 +126,9 @@ class HeroSection extends StatelessWidget {
 
 class _SquareTitle extends StatelessWidget {
   final List<String> lines;
-  final Color color;
 
   const _SquareTitle({
     required this.lines,
-    required this.color,
   });
 
   @override
@@ -142,16 +141,16 @@ class _SquareTitle extends StatelessWidget {
           fit: BoxFit.fitWidth,
           child: Text(
             line,
-            style: GoogleFonts.italiana(
-              height: 0.85, // Compatta l'interlinea per l'effetto blocco
+            style: GoogleFonts.cinzel(
+              height: 0.75, // Molto più compatto verticalmente
               fontWeight: FontWeight.w900,
-              color: Colors.white,
-              letterSpacing: -2,
+              color: AppTheme.gold,
+              letterSpacing: -1, // Lettere molto vicine per effetto blocco
               shadows: [
                 Shadow(
-                  color: AppTheme.gold.withValues(alpha: 0.3),
-                  offset: const Offset(0, 0),
-                  blurRadius: 20,
+                  color: Colors.black.withValues(alpha: 0.4),
+                  offset: const Offset(2, 2),
+                  blurRadius: 15,
                 ),
               ],
             ),
