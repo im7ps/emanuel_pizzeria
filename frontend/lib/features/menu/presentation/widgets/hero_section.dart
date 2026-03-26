@@ -4,6 +4,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme.dart';
 import '../../../../core/widgets/hover_button.dart';
+import '../../../../core/widgets/square_title.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -32,27 +33,49 @@ class HeroSection extends StatelessWidget {
         ),
         // Content
         Positioned.fill(
-          child: Center(
+          child: Align(
+            alignment: Alignment.topCenter,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 100),
+                  // Spostato sensibilmente più in alto rispetto al centro
+                  SizedBox(height: isMobile ? 120 : 180), 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxWidth: isMobile
-                            ? 260
-                            : 550, // Ridotto da 320 a 260 per mobile
+                        maxWidth: isMobile ? 300 : 800,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Titolo Tipografico a "Quadrato"
-                          const _SquareTitle(
+                          // Titolo su due righe
+                          Text(
+                            "GUSTO AUTENTICO\nDEL SUD",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.cinzel(
+                              fontSize: isMobile ? 32 : 64,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.gold,
+                              height: 1.1,
+                              letterSpacing: 4,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          /* Logica Quadrato (Commentata per riutilizzo futuro)
+                          const SquareTitle(
                             lines: ["GUSTO", "AUTENTICO", "DEL SUD"],
                           ),
+                          */
+
                           const SizedBox(height: 24),
                           // Linea sottile di accento
                           Container(
@@ -68,7 +91,7 @@ class HeroSection extends StatelessWidget {
                               color: Colors.white,
                               fontSize: isMobile ? 16 : 22,
                               fontWeight: FontWeight.w600,
-                              letterSpacing: 2, // Ridotto per maggiore densità
+                              letterSpacing: 2,
                               shadows: [
                                 Shadow(
                                   color: Colors.black.withValues(alpha: 0.5),
@@ -121,43 +144,6 @@ class HeroSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _SquareTitle extends StatelessWidget {
-  final List<String> lines;
-
-  const _SquareTitle({
-    required this.lines,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: lines.map((line) {
-        return FittedBox(
-          fit: BoxFit.fitWidth,
-          child: Text(
-            line,
-            style: GoogleFonts.cinzel(
-              height: 0.75, // Molto più compatto verticalmente
-              fontWeight: FontWeight.w900,
-              color: AppTheme.gold,
-              letterSpacing: -1, // Lettere molto vicine per effetto blocco
-              shadows: [
-                Shadow(
-                  color: Colors.black.withValues(alpha: 0.4),
-                  offset: const Offset(2, 2),
-                  blurRadius: 15,
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
     );
   }
 }
