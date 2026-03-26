@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:go_router/go_router.dart';
+import '../theme.dart';
 
 class Navbar extends StatelessWidget implements PreferredSizeWidget {
   const Navbar({super.key});
@@ -26,20 +28,25 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
         elevation: 0,
         toolbarHeight: isMobile ? 80 : 100,
         centerTitle: false,
-        title: Text(
-          "EMANUEL",
-          style: GoogleFonts.playfairDisplay(
-            color: Colors.white, // Colore dorato come richiesto
-            fontWeight: FontWeight.w900,
-            fontSize: isMobile ? 24 : 28,
-            letterSpacing: 2,
+        title: GestureDetector(
+          onTap: () => context.go('/'),
+          child: Text(
+            "EMANUEL",
+            style: GoogleFonts.playfairDisplay(
+              color: AppTheme.gold,
+              fontWeight: FontWeight.w900,
+              fontSize: isMobile ? 24 : 28,
+              letterSpacing: 2,
+            ),
           ),
         ),
         actions: isMobile
             ? [
                 IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.white),
-                  onPressed: () {},
+                  icon: const Icon(Icons.menu, color: AppTheme.gold),
+                  onPressed: () {
+                    // TODO: Implement Drawer or Mobile Menu
+                  },
                 ),
                 const SizedBox(width: 10),
               ]
@@ -50,7 +57,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _NavButton(label: "IL MENÙ", onTap: () {}),
+                        _NavButton(label: "IL MENÙ", onTap: () => context.push('/menu')),
                         _NavButton(label: "SPEDIZIONI", onTap: () {}),
                         _NavButton(label: "LAVORA CON NOI", onTap: () {}),
                         _NavButton(label: "CONTATTI", onTap: () {}),
@@ -79,7 +86,7 @@ class _NavButton extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.gold,
         padding: const EdgeInsets.symmetric(horizontal: 12),
       ),
       child: Text(

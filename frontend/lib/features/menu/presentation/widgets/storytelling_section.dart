@@ -47,7 +47,7 @@ class StorytellingSection extends StatelessWidget {
       height: 500,
       decoration: BoxDecoration(
         image: const DecorationImage(
-          image: AssetImage("assets/images/san_marzano_homepage.jpg"),
+          image: AssetImage("assets/images/homepage/san_marzano_homepage.jpg"),
           fit: BoxFit.cover,
         ),
         boxShadow: [

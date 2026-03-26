@@ -6,7 +6,7 @@ Questo file definisce gli standard di ingegneria e le direttive di sviluppo per 
 
 ## 🏛️ Architettura Frontend (Clean Architecture)
 
-1.  **Feature-First Structure:** Organizza il codice per feature (es. `auth`, `catalog`, `booking`, `orders`). All'interno di ogni feature, mantieni la separazione rigorosa:
+1.  **Feature-First Structure:** Organizza il codice per feature (es. `auth`, `menu`, `booking`, `orders`). All'interno di ogni feature, mantieni la separazione rigorosa:
     *   **Presentation:** Widget (UI) e Notifier/Controller (Logic).
     *   **Domain:** Entities (modelli di business) e interfacce dei Repository.
     *   **Application:** Service layer per logica cross-feature (opzionale).

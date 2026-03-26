@@ -22,31 +22,31 @@ class _ServicesState extends State<Services> {
       "title": "A Tavola",
       "description":
           "L'esperienza completa in Pizzeria. Ti aspettiamo nel cuore di Reggio Calabria.",
-      "imagePath": "assets/images/table.jpg",
+      "imagePath": "assets/images/homepage/table.jpg",
     },
     {
       "title": "Take Away",
       "description":
           "Pronta per te in soli 15 minuti. Per non rinunciare mai al Sud.",
-      "imagePath": "assets/images/delivery.jpg",
+      "imagePath": "assets/images/homepage/delivery.jpg",
     },
     {
       "title": "Gastronomia",
       "description":
           "I piatti della tradizione pronti da gustare, preparati con amore ogni giorno.",
-      "imagePath": "assets/images/gastronomy.jpg",
+      "imagePath": "assets/images/homepage/gastronomy.jpg",
     },
     {
       "title": "Rosticceria",
       "description":
           "Arancini, calzoni e le delizie fritte che hanno reso celebre lo street food del Sud.",
-      "imagePath": "assets/images/rosticceria.jpg",
+      "imagePath": "assets/images/homepage/rosticceria.jpg",
     },
     {
       "title": "Shop Online",
       "description":
           "I migliori kit pizza e prodotti tipici consegnati in tutta Italia direttamente a casa tua.",
-      "imagePath": "assets/images/products.jpg",
+      "imagePath": "assets/images/homepage/products.jpg",
     },
   ];
 
@@ -91,7 +91,7 @@ class _ServicesState extends State<Services> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: const AssetImage(
-              "assets/images/rock_wall_background_homepage.jpg"),
+              "assets/images/homepage/rock_wall_background_homepage.jpg"),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             Colors.black.withValues(alpha: 0.45),

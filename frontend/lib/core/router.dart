@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
-import '../features/catalog/presentation/home_page.dart';
+import '../features/menu/presentation/home_page.dart';
+import '../features/menu/presentation/menu_page.dart';
+import '../features/booking/presentation/booking_page.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -7,6 +9,14 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const HomePage(),
+    ),
+    GoRoute(
+      path: '/menu',
+      builder: (context, state) => const MenuPage(),
+    ),
+    GoRoute(
+      path: '/bookings',
+      builder: (context, state) => const BookingPage(),
     ),
   ],
 );

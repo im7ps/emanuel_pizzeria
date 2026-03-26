@@ -84,4 +84,36 @@ class AppTheme {
       ),
     );
   }
+
+  // Stili specifici per il Menu
+  static TextStyle get menuTitle => GoogleFonts.playfairDisplay(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: accent,
+      );
+
+  static TextStyle get menuIngredients => GoogleFonts.lato(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: text,
+        height: 1.4,
+      );
+
+  static TextStyle get menuPrice => GoogleFonts.arvo(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: text,
+      );
+
+  static TextStyle get menuChefNote => GoogleFonts.pinyonScript(
+        fontSize: 24,
+        color: secondary,
+      );
+
+  static TextStyle get menuCategoryTitle => GoogleFonts.playfairDisplay(
+        fontSize: 28,
+        fontWeight: FontWeight.w900,
+        color: text,
+        letterSpacing: 1.2,
+      );
 }

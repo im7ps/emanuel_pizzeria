@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme.dart';
 import '../../../../core/widgets/hover_button.dart';
 
@@ -22,7 +23,7 @@ class HeroSection extends StatelessWidget {
           width: double.infinity,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/pizza_homepage.jpg"),
+              image: AssetImage("assets/images/homepage/pizza_homepage.jpg"),
               fit: BoxFit.cover,
               opacity: 0.7,
             ),
@@ -96,13 +97,13 @@ class HeroSection extends StatelessWidget {
                             label: "IL NOSTRO MENÙ",
                             baseColor: AppTheme.gold,
                             isMobile: isMobile,
-                            onPressed: () {},
+                            onPressed: () => context.push('/menu'),
                           ),
                           _ResponsiveHeroButton(
                             label: "PRENOTA UN TAVOLO",
                             baseColor: AppTheme.accent,
                             isMobile: isMobile,
-                            onPressed: () {},
+                            onPressed: () => context.push('/bookings'),
                           ),
                           _ResponsiveHeroButton(
                             label: "ORDINA A CASA",
