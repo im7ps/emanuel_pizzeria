@@ -4,7 +4,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme.dart';
 import '../../../../core/widgets/hover_button.dart';
-import '../../../../core/widgets/square_title.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -40,7 +39,7 @@ class HeroSection extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Spostato sensibilmente più in alto rispetto al centro
-                  SizedBox(height: isMobile ? 120 : 180), 
+                  SizedBox(height: isMobile ? 120 : 180),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: ConstrainedBox(
@@ -69,7 +68,7 @@ class HeroSection extends StatelessWidget {
                               ],
                             ),
                           ),
-                          
+
                           /* Logica Quadrato (Commentata per riutilizzo futuro)
                           const SquareTitle(
                             lines: ["GUSTO", "AUTENTICO", "DEL SUD"],

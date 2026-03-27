@@ -58,7 +58,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _NavButton(label: "IL MENÙ", onTap: () => context.push('/menu')),
-                        _NavButton(label: "SPEDIZIONI", onTap: () {}),
+                        _NavButton(label: "SPEDIZIONI", onTap: () => context.push('/spedizioni')),
                         _NavButton(label: "LAVORA CON NOI", onTap: () {}),
                         _NavButton(label: "CONTATTI", onTap: () {}),
                       ],

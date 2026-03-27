@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
@@ -31,8 +31,10 @@ dev_dependencies:
   build_runner: ^2.4.15
   freezed: ^2.5.7
   json_serializable: ^6.9.0
-  custom_lint: ^0.7.1
-  riverpod_lint: ^2.6.2
+
+dependency_overrides:
+  analyzer: 6.4.1
+  analyzer_plugin: 0.14.3
 
 flutter:
   uses-material-design: true
@@ -41,3 +43,4 @@ flutter:
     - assets/images/homepage/
     - assets/images/menu/
     - assets/images/bookings/
+    - assets/images/shippings/

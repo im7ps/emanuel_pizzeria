@@ -9,6 +9,7 @@ Questo file traccia la sincronizzazione delle entità e delle rotte tra il Front
 | **Booking** | ✅ UI Mock | 🛠️ Da Creare | Gestione prenotazione tavoli |
 | **User** | 🛠️ In corso | ✅ Implementato | Autenticazione JWT |
 | **Menu** | ✅ UI Implementata | ✅ Implementato | Menu e prodotti |
+| **Shipping** | ✅ UI Mock | 🛠️ Da Creare | Prodotti per spedizione e e-commerce |
 
 ## 🔗 Log delle Rotte (API v1)
 
@@ -17,6 +18,7 @@ Questo file traccia la sincronizzazione delle entità e delle rotte tra il Front
 | **Auth** | `/auth/login` | `/login` | ✅ |
 | **Bookings** | `/bookings/` | `/bookings` | 🛠️ Solo UI |
 | **Menu** | `/catalog/items` | `/menu` | ✅ |
+| **Shipping** | `/shipping/products` | `/spedizioni` | 🛠️ Solo UI |
 
 ## 🛠️ Specifiche Entità `Booking` (Regole di Validazione)
 
