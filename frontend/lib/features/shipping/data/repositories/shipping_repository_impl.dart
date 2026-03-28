@@ -8,7 +8,6 @@ import 'package:emanuel_pizzeria/features/shipping/domain/repositories/shipping_
 
 class ShippingRepositoryImpl implements ShippingRepository {
   final Dio _dio;
-
   ShippingRepositoryImpl(this._dio);
 
   @override

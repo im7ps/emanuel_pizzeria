@@ -14,7 +14,7 @@ class ShippingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productsAsync = ref.watch(shippingNotifierProvider);
+    final productsAsync = ref.watch(shippingProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -24,14 +24,10 @@ class ShippingPage extends ConsumerWidget {
           const SliverToBoxAdapter(child: Navbar()),
 
           // Hero Narrative
-          SliverToBoxAdapter(
-            child: _HeroSection(theme: theme),
-          ),
+          SliverToBoxAdapter(child: _HeroSection(theme: theme)),
 
           // Trust Section
-          const SliverToBoxAdapter(
-            child: TrustSection(),
-          ),
+          const SliverToBoxAdapter(child: TrustSection()),
 
           // Products Header
           SliverToBoxAdapter(
@@ -45,11 +41,7 @@ class ShippingPage extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    width: 60,
-                    height: 3,
-                    color: AppTheme.gold,
-                  ),
+                  Container(width: 60, height: 3, color: AppTheme.accent),
                 ],
               ),
             ),
@@ -68,7 +60,7 @@ class ShippingPage extends ConsumerWidget {
                       const Condition.equals(name: TABLET, value: 2),
                       const Condition.largerThan(name: TABLET, value: 4),
                     ],
-                  ).value ?? 1,
+                  ).value,
                   mainAxisSpacing: 32,
                   crossAxisSpacing: 32,
                   childAspectRatio: 0.75,
@@ -87,11 +79,11 @@ class ShippingPage extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     Text('Errore nel caricamento: $err'),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => ref.read(shippingNotifierProvider.notifier).refresh(),
+                      onPressed: () =>
+                          ref.read(shippingProvider.notifier).refresh(),
                       child: const Text('Riprova'),
                     ),
                   ],
@@ -101,9 +93,7 @@ class ShippingPage extends ConsumerWidget {
           ),
 
           // FAQ Section
-          const SliverToBoxAdapter(
-            child: FAQSection(),
-          ),
+          const SliverToBoxAdapter(child: FAQSection()),
 
           // Footer
           const SliverToBoxAdapter(child: Footer()),

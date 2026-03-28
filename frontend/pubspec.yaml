@@ -4,19 +4,19 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.8.0
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  flutter_riverpod: ^2.6.1
-  riverpod_annotation: ^2.6.1
-  go_router: ^14.7.2
-  google_fonts: ^6.2.1
-  dio: ^5.7.0
-  fpdart: ^1.1.0
-  freezed_annotation: ^2.4.4
+  flutter_riverpod: ^3.1.0
+  riverpod_annotation: ^4.0.0
+  go_router: ^17.0.0
+  google_fonts: ^6.3.2
+  dio: ^5.9.2
+  fpdart: ^1.2.0
+  freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   responsive_framework: ^1.5.1
   url_launcher: ^6.3.2
@@ -26,16 +26,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
-  riverpod_generator: ^2.6.2
-  build_runner: ^2.4.15
-  freezed: ^2.5.7
-  json_serializable: ^6.9.0
+  flutter_lints: ^6.0.0
+  riverpod_generator: ^4.0.0+1
+  build_runner: ^2.7.1
+  freezed: ^3.2.3
+  json_serializable: ^6.11.2
 
-dependency_overrides:
-  analyzer: 6.4.1
-  analyzer_plugin: 0.14.3
-
+# Removed overrides to allow natural resolution on modern SDK
 flutter:
   uses-material-design: true
   assets:

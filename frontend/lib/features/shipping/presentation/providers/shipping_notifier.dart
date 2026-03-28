@@ -1,33 +1,34 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:emanuel_pizzeria/features/shipping/data/repositories/shipping_repository_impl.dart';
 import 'package:emanuel_pizzeria/features/shipping/domain/models/shipping_product.dart';
 
-class ShippingNotifier extends StateNotifier<AsyncValue<List<ShippingProduct>>> {
-  final Ref _ref;
+part 'shipping_notifier.g.dart';
 
-  ShippingNotifier(this._ref) : super(const AsyncValue.loading()) {
-    fetchProducts();
+@riverpod
+class ShippingNotifier extends _$ShippingNotifier {
+  @override
+  FutureOr<List<ShippingProduct>> build() {
+    return _fetchProducts();
   }
 
-  Future<void> fetchProducts() async {
-    state = const AsyncValue.loading();
-    final repository = _ref.read(shippingRepositoryProvider);
+  Future<List<ShippingProduct>> _fetchProducts() async {
+    final repository = ref.read(shippingRepositoryProvider);
     final result = await repository.getProducts().run();
     
-    state = result.fold(
-      (failure) => AsyncValue.error(failure.message ?? 'Unknown error', StackTrace.current),
-      (products) => AsyncValue.data(products),
+    return result.fold(
+      (failure) => throw failure.message ?? 'Unknown error',
+      (products) => products,
     );
   }
 
-  Future<void> refresh() => fetchProducts();
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => _fetchProducts());
+  }
 }
 
-final shippingNotifierProvider = StateNotifierProvider<ShippingNotifier, AsyncValue<List<ShippingProduct>>>((ref) {
-  return ShippingNotifier(ref);
-});
-
-final shippingCategoriesProvider = FutureProvider<List<ShippingCategory>>((ref) async {
+@riverpod
+Future<List<ShippingCategory>> shippingCategories(Ref ref) async {
   final repository = ref.read(shippingRepositoryProvider);
   final result = await repository.getCategories().run();
   
@@ -35,4 +36,4 @@ final shippingCategoriesProvider = FutureProvider<List<ShippingCategory>>((ref) 
     (failure) => throw failure.message ?? 'Unknown error',
     (categories) => categories,
   );
-});
+}

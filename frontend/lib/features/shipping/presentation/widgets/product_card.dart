@@ -37,7 +37,7 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Product Info
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -70,7 +70,10 @@ class ProductCard extends StatelessWidget {
                             // TODO: Add to cart logic
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             minimumSize: Size.zero,
                           ),
                           child: const Icon(Icons.add_shopping_cart, size: 20),
@@ -82,17 +85,18 @@ class ProductCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           // Badge (Best Seller, Novità, etc.)
           if (product.badge != null)
             Positioned(
               top: 12,
               left: 12,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: const BoxDecoration(
-                  color: AppTheme.gold,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
                 ),
+                decoration: const BoxDecoration(color: AppTheme.accent),
                 child: Text(
                   product.badge!.toUpperCase(),
                   style: const TextStyle(
@@ -104,7 +108,7 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
           // Fresh Badge
           if (product.isFresh)
             Positioned(
