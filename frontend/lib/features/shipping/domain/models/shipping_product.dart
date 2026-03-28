@@ -1,57 +1,34 @@
-class ShippingProduct {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
-  final String imageUrl;
-  final String? badge;
-  final bool isFresh;
-  final int stockQuantity;
-  final String categoryId;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const ShippingProduct({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
-    this.badge,
-    this.isFresh = false,
-    this.stockQuantity = 0,
-    required this.categoryId,
-  });
+part 'shipping_product.freezed.dart';
+part 'shipping_product.g.dart';
 
-  factory ShippingProduct.fromJson(Map<String, dynamic> json) {
-    return ShippingProduct(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      price: (json['price'] as num).toDouble(),
-      imageUrl: json['imageUrl'] as String,
-      badge: json['badge'] as String?,
-      isFresh: json['isFresh'] as bool? ?? false,
-      stockQuantity: json['stockQuantity'] as int? ?? 0,
-      categoryId: json['categoryId'] as String,
-    );
-  }
+@freezed
+abstract class ShippingProduct with _$ShippingProduct {
+  const factory ShippingProduct({
+    required String id,
+    required String name,
+    required String description,
+    required double price,
+    required String imageUrl,
+    String? badge,
+    @Default(false) bool isFresh,
+    @Default(0) int stockQuantity,
+    required String categoryId,
+  }) = _ShippingProduct;
+
+  factory ShippingProduct.fromJson(Map<String, dynamic> json) =>
+      _$ShippingProductFromJson(json);
 }
 
-class ShippingCategory {
-  final String id;
-  final String name;
-  final String? description;
+@freezed
+abstract class ShippingCategory with _$ShippingCategory {
+  const factory ShippingCategory({
+    required String id,
+    required String name,
+    String? description,
+  }) = _ShippingCategory;
 
-  const ShippingCategory({
-    required this.id,
-    required this.name,
-    this.description,
-  });
-
-  factory ShippingCategory.fromJson(Map<String, dynamic> json) {
-    return ShippingCategory(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-    );
-  }
+  factory ShippingCategory.fromJson(Map<String, dynamic> json) =>
+      _$ShippingCategoryFromJson(json);
 }

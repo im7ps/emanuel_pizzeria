@@ -2,13 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:emanuel_pizzeria/core/failure.dart';
-import 'package:emanuel_pizzeria/core/network/dio_provider.dart';
 import 'package:emanuel_pizzeria/features/shipping/domain/models/shipping_product.dart';
 import 'package:emanuel_pizzeria/features/shipping/domain/repositories/shipping_repository.dart';
 
 class ShippingRepositoryImpl implements ShippingRepository {
-  final Dio _dio;
-  ShippingRepositoryImpl(this._dio);
+  ShippingRepositoryImpl();
 
   @override
   TaskEither<Failure, List<ShippingProduct>> getProducts() {
@@ -95,5 +93,5 @@ class ShippingRepositoryImpl implements ShippingRepository {
 }
 
 final shippingRepositoryProvider = Provider<ShippingRepository>((ref) {
-  return ShippingRepositoryImpl(ref.watch(dioProvider));
+  return ShippingRepositoryImpl();
 });

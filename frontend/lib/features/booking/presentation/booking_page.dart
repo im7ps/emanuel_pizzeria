@@ -1,40 +1,54 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import '../../../core/theme.dart';
 import '../../../core/widgets/navbar.dart';
 import '../../../core/widgets/footer.dart';
+import '../domain/models/booking_models.dart';
+import 'providers/booking_notifier.dart';
 
-class BookingPage extends StatefulWidget {
+class BookingPage extends ConsumerStatefulWidget {
   const BookingPage({super.key});
 
   @override
-  State<BookingPage> createState() => _BookingPageState();
+  ConsumerState<BookingPage> createState() => _BookingPageState();
 }
 
-class _BookingPageState extends State<BookingPage> {
-  final List<bool> tableStatus =
-      List.generate(6, (index) => index == 1 || index == 4);
-
-  void _showBookingDialog(int tableIndex) {
+class _BookingPageState extends ConsumerState<BookingPage> {
+  void _showBookingDialog(int tableId) {
     showDialog(
       context: context,
-      builder: (context) => _BookingDialog(
-        tableIndex: tableIndex,
-        onConfirm: (data) {
-          setState(() => tableStatus[tableIndex] = true);
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Prenotazione confermata!")));
-        },
-      ),
+      builder: (context) {
+        final navigator = Navigator.of(context);
+        final messenger = ScaffoldMessenger.of(context);
+        return _BookingDialog(
+          tableId: tableId,
+          onConfirm: (reservation) async {
+            final success = await ref
+                .read(bookingProvider.notifier)
+                .createBooking(reservation);
+            if (mounted) {
+              navigator.pop();
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text(success
+                      ? "Prenotazione confermata!"
+                      : "Errore nella prenotazione. Riprova."),
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
+    final tablesAsync = ref.watch(bookingProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -62,81 +76,96 @@ class _BookingPageState extends State<BookingPage> {
                       const SizedBox(height: 40),
                       if (!isMobile) _buildLegend(false),
                       const SizedBox(height: 40),
-                      Center(
-                        child: Container(
-                          constraints: const BoxConstraints(maxWidth: 900),
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              double mapWidth = constraints.maxWidth;
-                              double mapHeight = isMobile ? 500 : 600;
+                      tablesAsync.when(
+                        data: (tables) => Center(
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 900),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                double mapWidth = constraints.maxWidth;
+                                double mapHeight = isMobile ? 500 : 600;
 
-                              return Container(
-                                height: mapHeight,
-                                width: mapWidth,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF0EAD6),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                      color:
-                                          AppTheme.text.withValues(alpha: 0.2),
-                                      width: 2),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color:
-                                            Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 30,
-                                        offset: const Offset(0, 10))
-                                  ],
-                                ),
-                                child: Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    Positioned.fill(
-                                        child: Opacity(
-                                            opacity: 0.3,
-                                            child: Image.asset(
-                                                "assets/images/bookings/marble_floor.jpg",
-                                                fit: BoxFit.cover))),
+                                return Container(
+                                  height: mapHeight,
+                                  width: mapWidth,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF0EAD6),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                        color: AppTheme.text
+                                            .withValues(alpha: 0.2),
+                                        width: 2),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black
+                                              .withValues(alpha: 0.1),
+                                          blurRadius: 30,
+                                          offset: const Offset(0, 10))
+                                    ],
+                                  ),
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Positioned.fill(
+                                          child: Opacity(
+                                              opacity: 0.3,
+                                              child: Image.asset(
+                                                  "assets/images/bookings/marble_floor.jpg",
+                                                  fit: BoxFit.cover))),
 
-                                    // MURO SINISTRO CON VARCO ENTRATA (Assenza di bordo)
-                                    _buildWall(0, 0, 15, mapHeight * 0.35),
-                                    _buildWall(0, mapHeight * 0.65, 15,
-                                        mapHeight * 0.35),
-                                    _buildEntranceLabel(
-                                        0, mapHeight * 0.35, mapHeight * 0.3),
+                                      // MURO SINISTRO CON VARCO ENTRATA
+                                      _buildWall(0, 0, 15, mapHeight * 0.35),
+                                      _buildWall(0, mapHeight * 0.65, 15,
+                                          mapHeight * 0.35),
+                                      _buildEntranceLabel(
+                                          0, mapHeight * 0.35, mapHeight * 0.3),
 
-                                    // ALTRI MURI
-                                    _buildWall(0, 0, mapWidth, 15),
-                                    _buildServiceArea(mapWidth * 0.75, 0,
-                                        mapWidth * 0.25, 120),
-                                    _buildWall(0, mapHeight - 15, mapWidth, 15),
+                                      // ALTRI MURI
+                                      _buildWall(0, 0, mapWidth, 15),
+                                      _buildServiceArea(mapWidth * 0.75, 0,
+                                          mapWidth * 0.25, 120),
+                                      _buildWall(
+                                          0, mapHeight - 15, mapWidth, 15),
 
-                                    // FINESTRE (Quadrati azzurri sul muro)
-                                    _buildWindow(mapWidth * 0.2, mapHeight - 15,
-                                        mapWidth * 0.2, 15),
-                                    _buildWindow(mapWidth * 0.6, mapHeight - 15,
-                                        mapWidth * 0.2, 15),
+                                      // FINESTRE
+                                      _buildWindow(mapWidth * 0.2,
+                                          mapHeight - 15, mapWidth * 0.2, 15),
+                                      _buildWindow(mapWidth * 0.6,
+                                          mapHeight - 15, mapWidth * 0.2, 15),
 
-                                    _buildKitchenArea(mapWidth - 100, 120, 100,
-                                        mapHeight - 120),
+                                      _buildKitchenArea(mapWidth - 100, 120,
+                                          100, mapHeight - 120),
 
-                                    // TAVOLI
-                                    _buildTable(
-                                        mapWidth * 0.25, mapHeight * 0.7, 0),
-                                    _buildTable(
-                                        mapWidth * 0.5, mapHeight * 0.45, 1),
-                                    _buildTable(
-                                        mapWidth * 0.25, mapHeight * 0.2, 2),
-                                    _buildTable(
-                                        mapWidth * 0.75, mapHeight * 0.75, 3),
-                                    _buildTable(
-                                        mapWidth * 0.7, mapHeight * 0.4, 4),
-                                    _buildTable(
-                                        mapWidth * 0.6, mapHeight * 0.75, 5),
-                                  ],
-                                ),
-                              );
-                            },
+                                      // TAVOLI DINAMICI
+                                      ...tables.map((table) => _buildTable(
+                                          mapWidth * table.x,
+                                          mapHeight * table.y,
+                                          table)),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(80),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        error: (err, stack) => Center(
+                          child: Column(
+                            children: [
+                              Text("Errore caricamento mappa: $err"),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () => ref
+                                    .read(bookingProvider.notifier)
+                                    .refresh(),
+                                child: const Text("RIPROVA"),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -323,23 +352,23 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  Widget _buildTable(double x, double y, int index) {
+  Widget _buildTable(double x, double y, TableModel table) {
     return Positioned(
         left: x,
         top: y,
         child: _RefinedTableGroup(
-            index: index,
-            isBooked: tableStatus[index],
-            onTap: () => _showBookingDialog(index)));
+            id: table.id,
+            isBooked: table.isBooked,
+            onTap: () => _showBookingDialog(table.id)));
   }
 }
 
 class _RefinedTableGroup extends StatelessWidget {
   final bool isBooked;
   final VoidCallback onTap;
-  final int index;
+  final int id;
   const _RefinedTableGroup(
-      {required this.isBooked, required this.onTap, required this.index});
+      {required this.isBooked, required this.onTap, required this.id});
   @override
   Widget build(BuildContext context) {
     final statusColor = isBooked ? Colors.red.shade700 : Colors.green.shade600;
@@ -368,7 +397,7 @@ class _RefinedTableGroup extends StatelessWidget {
                         blurRadius: 10)
                 ]),
             child: Center(
-                child: Text("${index + 1}",
+                child: Text("$id",
                     style: GoogleFonts.playfairDisplay(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -448,9 +477,9 @@ class _BookingHero extends StatelessWidget {
 }
 
 class _BookingDialog extends StatefulWidget {
-  final int tableIndex;
-  final Function(Map<String, dynamic>) onConfirm;
-  const _BookingDialog({required this.tableIndex, required this.onConfirm});
+  final int tableId;
+  final Function(BookingReservation) onConfirm;
+  const _BookingDialog({required this.tableId, required this.onConfirm});
   @override
   State<_BookingDialog> createState() => _BookingDialogState();
 }
@@ -492,7 +521,7 @@ class _BookingDialogState extends State<_BookingDialog> {
                           ])),
                       padding: const EdgeInsets.all(24),
                       alignment: Alignment.bottomLeft,
-                      child: Text("TAVOLO ${widget.tableIndex + 1}",
+                      child: Text("TAVOLO ${widget.tableId}",
                           style: GoogleFonts.playfairDisplay(
                               color: Colors.white,
                               fontSize: 28,
@@ -538,8 +567,9 @@ class _BookingDialogState extends State<_BookingDialog> {
                                       firstDate: DateTime.now(),
                                       lastDate: DateTime.now()
                                           .add(const Duration(days: 30)));
-                                  if (p != null)
+                                  if (p != null) {
                                     setState(() => _selectedDate = p);
+                                  }
                                 })),
                         const SizedBox(width: 20),
                         Expanded(
@@ -551,8 +581,9 @@ class _BookingDialogState extends State<_BookingDialog> {
                                   final p = await showTimePicker(
                                       context: context,
                                       initialTime: _selectedTime);
-                                  if (p != null)
+                                  if (p != null) {
                                     setState(() => _selectedTime = p);
+                                  }
                                 }))
                       ]),
                       const SizedBox(height: 32),
@@ -568,9 +599,20 @@ class _BookingDialogState extends State<_BookingDialog> {
                         Expanded(
                             child: ElevatedButton(
                                 onPressed: () {
-                                  if (_formKey.currentState!.validate())
+                                  if (_formKey.currentState!.validate()) {
                                     widget.onConfirm(
-                                        {"name": _nameController.text});
+                                      BookingReservation(
+                                        name: _nameController.text,
+                                        phone: _phoneController.text,
+                                        guests:
+                                            int.tryParse(_peopleController.text) ??
+                                                4,
+                                        date: _selectedDate,
+                                        time: _selectedTime.format(context),
+                                        tableId: widget.tableId,
+                                      ),
+                                    );
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppTheme.accent),

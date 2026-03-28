@@ -8,6 +8,7 @@ import '../../../core/widgets/navbar.dart';
 import '../../../core/widgets/footer.dart';
 import '../domain/models/menu_models.dart';
 import 'providers/cart_notifier.dart';
+import 'providers/menu_notifier.dart';
 
 // --- UI (PRESENTATION) ---
 
@@ -20,7 +21,7 @@ class MenuPage extends ConsumerStatefulWidget {
 
 class _MenuPageState extends ConsumerState<MenuPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String selectedCategory = 'Le Classiche';
+  String? selectedCategory;
   String searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
@@ -31,57 +32,6 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     'Uova': Icons.egg,
     'Pesce': Icons.phishing,
   };
-
-  late final List<Map<String, dynamic>> menuData = [
-    {
-      'title': 'Le Classiche',
-      'image': 'assets/images/homepage/pizza_homepage.jpg',
-      'items': [
-        const Product(
-          name: 'Margherita del Vesuvio',
-          description:
-              'Pomodoro San Marzano DOP, Mozzarella di Bufala, Basilico Fresco, Olio EVO.',
-          basePrice: 8.50,
-          image: 'assets/images/homepage/pizza_homepage.jpg',
-          rating: 4.9,
-          isBestSeller: true,
-          isVeg: true,
-          allergens: ['Glutine', 'Lattosio'],
-          baseIngredients: [
-            Ingredient(name: 'Pomodoro San Marzano'),
-            Ingredient(name: 'Mozzarella di Bufala'),
-            Ingredient(name: 'Basilico'),
-          ],
-          extraOptions: [
-            Ingredient(name: 'Doppia Bufala', price: 2.50),
-            Ingredient(name: 'Bordo Ripieno', price: 2.00),
-          ],
-        ),
-      ],
-    },
-    {
-      'title': 'Le Speciali',
-      'image': 'assets/images/homepage/san_marzano_homepage.jpg',
-      'items': [
-        const Product(
-          name: 'Pistacchio e Mortadella',
-          description:
-              'Pesto di Pistacchio, Provola, Mortadella Bologna IGP, Granella di Pistacchio.',
-          basePrice: 12.00,
-          image: 'assets/images/homepage/san_marzano_homepage.jpg',
-          rating: 5.0,
-          isBestSeller: true,
-          allergens: ['Glutine', 'Lattosio', 'Frutta a guscio'],
-          baseIngredients: [
-            Ingredient(name: 'Provola di Agerola'),
-            Ingredient(name: 'Pesto di Pistacchio'),
-            Ingredient(name: 'Mortadella IGP'),
-          ],
-          extraOptions: [Ingredient(name: 'Stracciatella Puglia', price: 3.00)],
-        ),
-      ],
-    },
-  ];
 
   @override
   void dispose() {
@@ -94,6 +44,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
     final viewHeight = MediaQuery.of(context).size.height;
     final cartItems = ref.watch(cartProvider);
+    final menuAsync = ref.watch(menuProvider);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -116,34 +67,61 @@ class _MenuPageState extends ConsumerState<MenuPage> {
               color: AppTheme.background.withValues(alpha: 0.88),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 140),
-                Text(
-                  "IL NOSTRO MENÙ",
-                  style: AppTheme.menuCategoryTitle.copyWith(
-                    fontSize: isMobile ? 32 : 48,
-                  ),
+          menuAsync.when(
+            data: (menuData) {
+              if (selectedCategory == null && menuData.isNotEmpty) {
+                // Initialize selection on first load
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted && selectedCategory == null) {
+                    setState(() => selectedCategory = menuData.first['title']);
+                  }
+                });
+              }
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 140),
+                    Text(
+                      "IL NOSTRO MENÙ",
+                      style: AppTheme.menuCategoryTitle.copyWith(
+                        fontSize: isMobile ? 32 : 48,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(height: 4, width: 80, color: AppTheme.accent),
+                    const SizedBox(height: 30),
+                    _buildSearchBar(isMobile),
+                    const SizedBox(height: 20),
+                    _buildCategorySelector(isMobile, menuData),
+                    const SizedBox(height: 30),
+                    if (!isMobile) _buildLegend(false),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 16 : 100,
+                      ),
+                      child: _buildMenuBody(isMobile, viewHeight, menuData),
+                    ),
+                    const SizedBox(height: 100),
+                    const Footer(),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Container(height: 4, width: 80, color: AppTheme.accent),
-                const SizedBox(height: 30),
-                _buildSearchBar(isMobile),
-                const SizedBox(height: 20),
-                _buildCategorySelector(isMobile),
-                const SizedBox(height: 30),
-                if (!isMobile) _buildLegend(false),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 16 : 100,
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("ERRORE: $err", style: const TextStyle(color: Colors.white)),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => ref.read(menuProvider.notifier).refresh(),
+                    child: const Text("RIPROVA"),
                   ),
-                  child: _buildMenuBody(isMobile, viewHeight),
-                ),
-                const SizedBox(height: 100),
-                const Footer(),
-              ],
+                ],
+              ),
             ),
           ),
           if (cartItems.isNotEmpty)
@@ -372,7 +350,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     );
   }
 
-  Widget _buildCategorySelector(bool isMobile) {
+  Widget _buildCategorySelector(bool isMobile, List<Map<String, dynamic>> menuData) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
@@ -421,18 +399,18 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     );
   }
 
-  Widget _buildMenuBody(bool isMobile, double viewHeight) {
+  Widget _buildMenuBody(bool isMobile, double viewHeight, List<Map<String, dynamic>> menuData) {
     List<Product> allProductsCombined = [];
     if (searchQuery.isNotEmpty) {
       for (var cat in menuData) {
         allProductsCombined.addAll(cat['items'] as List<Product>);
       }
     } else {
-      allProductsCombined =
-          menuData.firstWhere(
-                (cat) => cat['title'] == selectedCategory,
-              )['items']
-              as List<Product>;
+      final category = menuData.firstWhere(
+        (cat) => cat['title'] == selectedCategory,
+        orElse: () => menuData.first,
+      );
+      allProductsCombined = category['items'] as List<Product>;
     }
 
     final filtered = allProductsCombined
