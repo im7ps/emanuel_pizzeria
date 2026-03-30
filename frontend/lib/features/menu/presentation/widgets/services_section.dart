@@ -13,10 +13,10 @@ class Services extends StatefulWidget {
 }
 
 class _ServicesState extends State<Services> {
-  // Fattore per simulare il loop infinito
   static const int _loopFactor = 10000;
-  late PageController _pageController;
+  PageController? _pageController;
   int _virtualCurrentPage = 0;
+  double _lastFraction = 0;
 
   final List<Map<String, String>> _soulsData = [
     {
@@ -51,6 +51,35 @@ class _ServicesState extends State<Services> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _virtualCurrentPage = (_soulsData.length * _loopFactor) ~/ 2;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final isMobile = ResponsiveBreakpoints.of(context).isMobile;
+    final isTablet = ResponsiveBreakpoints.of(context).isTablet;
+    double fraction = isMobile ? 0.85 : (isTablet ? 0.45 : 0.33);
+
+    if (fraction != _lastFraction) {
+      _lastFraction = fraction;
+      _pageController?.dispose();
+      _pageController = PageController(
+        viewportFraction: fraction,
+        initialPage: _virtualCurrentPage,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
+  }
+
   void _onSoulTap(BuildContext context, String title) {
     switch (title) {
       case "A Tavola":
@@ -73,45 +102,15 @@ class _ServicesState extends State<Services> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _virtualCurrentPage = (_soulsData.length * _loopFactor) ~/ 2;
-    _pageController = PageController(
-      viewportFraction: 0.85,
-      initialPage: _virtualCurrentPage,
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final isMobile = ResponsiveBreakpoints.of(context).isMobile;
-    final isTablet = ResponsiveBreakpoints.of(context).isTablet;
-    double fraction = isMobile ? 0.85 : (isTablet ? 0.45 : 0.33);
-    
-    // Inizializziamo o aggiorniamo il controller se la frazione cambia
-    _pageController = PageController(
-      viewportFraction: fraction,
-      initialPage: _virtualCurrentPage,
-    );
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   void _nextPage() {
-    _pageController.nextPage(
+    _pageController?.nextPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }
 
   void _previousPage() {
-    _pageController.previousPage(
+    _pageController?.previousPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
@@ -148,16 +147,14 @@ class _ServicesState extends State<Services> {
                 ),
           ),
           SizedBox(height: isMobile ? 60 : 100),
-          // Carousel per tutti i dispositivi
           Column(
-            key: const ValueKey("carousel_section"),
             children: [
               SizedBox(
                 height: 540,
                 child: PageView.builder(
+                  key: ValueKey("services_carousel_$_lastFraction"),
                   controller: _pageController,
-                  onPageChanged: (index) =>
-                      setState(() => _virtualCurrentPage = index),
+                  onPageChanged: (index) => _virtualCurrentPage = index,
                   itemBuilder: (context, index) {
                     final actualIndex = index % _soulsData.length;
                     final data = _soulsData[actualIndex];
@@ -182,8 +179,7 @@ class _ServicesState extends State<Services> {
                 children: [
                   SquareIconButton(
                     icon: Icons.chevron_left,
-                    onPressed:
-                        _previousPage, // Sempre attivo con loop infinito
+                    onPressed: _previousPage,
                   ),
                   const SizedBox(width: 20),
                   SquareIconButton(

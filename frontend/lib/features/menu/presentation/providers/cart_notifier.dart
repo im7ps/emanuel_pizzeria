@@ -3,7 +3,7 @@ import '../../domain/models/menu_models.dart';
 
 part 'cart_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Cart extends _$Cart {
   @override
   List<CartItem> build() => [];

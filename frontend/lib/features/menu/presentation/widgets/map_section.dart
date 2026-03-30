@@ -83,6 +83,7 @@ class _MapSectionState extends State<MapSection> {
           if (!_isInteracting)
             Positioned.fill(
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => setState(() => _isInteracting = true),
                 child: Container(
                   color: Colors.black.withValues(alpha: 0.1),

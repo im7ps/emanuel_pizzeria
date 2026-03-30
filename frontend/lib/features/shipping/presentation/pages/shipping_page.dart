@@ -28,6 +28,7 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
     final productsAsync = ref.watch(shippingProvider);
     final theme = Theme.of(context);
     final cartItems = ref.watch(cartProvider);
+    final cartType = ref.read(cartProvider.notifier).cartType;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -38,6 +39,9 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
             slivers: [
               // Navbar
               const SliverToBoxAdapter(child: Navbar()),
+
+              if (cartType == ProductType.local)
+                SliverToBoxAdapter(child: _buildCartConflictBanner()),
 
               // Hero Narrative
               SliverToBoxAdapter(child: _HeroSection(theme: theme)),
@@ -120,6 +124,41 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
           ),
           if (cartItems.isNotEmpty)
             Positioned(bottom: 30, left: 20, child: _buildCartFAB()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCartConflictBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      color: Colors.red.withValues(alpha: 0.8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: Colors.white),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              "Hai prodotti dal menù locale nel carrello. Non puoi aggiungere prodotti da spedire senza prima svuotarlo o completare l'acquisto.",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => ref.read(cartProvider.notifier).clearCart(),
+            child: const Text(
+              "SVUOTA",
+              style: TextStyle(
+                color: Colors.white,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
         ],
       ),
     );

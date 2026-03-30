@@ -25,7 +25,7 @@ class HeroSection extends StatelessWidget {
             image: DecorationImage(
               image: AssetImage("assets/images/homepage/pizza_homepage.jpg"),
               fit: BoxFit.cover,
-              opacity: 0.7,
+              opacity: 0.8, // Maggiore visibilità
             ),
             color: Colors.black,
           ),
@@ -34,105 +34,60 @@ class HeroSection extends StatelessWidget {
         Positioned.fill(
           child: Align(
             alignment: Alignment.topCenter,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Spostato sensibilmente più in alto rispetto al centro
-                  SizedBox(height: isMobile ? 120 : 180),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: isMobile ? 300 : 800,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Titolo su due righe
-                          Text(
-                            "GUSTO AUTENTICO\nDEL SUD",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.cinzel(
-                              fontSize: isMobile ? 32 : 64,
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.gold,
-                              height: 1.1,
-                              letterSpacing: 4,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withValues(alpha: 0.5),
-                                  offset: const Offset(2, 2),
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: isMobile ? 180 : 260),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: isMobile ? 350 : 1000,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "GUSTO AUTENTICO DEL SUD",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.cinzel(
+                            fontSize: isMobile ? 28 : 58,
+                            fontWeight: FontWeight.w900,
+                            color: AppTheme.gold,
+                            height: 1.0,
+                            letterSpacing: isMobile ? 2 : 4,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withValues(alpha: 0.6),
+                                offset: const Offset(2, 2),
+                                blurRadius: 12,
+                              ),
+                            ],
                           ),
-
-                          /* Logica Quadrato (Commentata per riutilizzo futuro)
-                          const SquareTitle(
-                            lines: ["GUSTO", "AUTENTICO", "DEL SUD"],
+                        ),
+                        const SizedBox(height: 16), // Distanza ridotta
+                        Text(
+                          "LA TRADIZIONE PROFUMA DI CASA",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.cinzel(
+                            color: Colors.white,
+                            fontSize: isMobile ? 14 : 20,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 2,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withValues(alpha: 0.6),
+                                offset: const Offset(0, 2),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
-                          */
-
-                          const SizedBox(height: 24),
-                          // Linea sottile di accento
-                          Container(
-                            height: 2,
-                            width: 60,
-                            color: AppTheme.gold.withValues(alpha: 0.8),
-                          ),
-                          const SizedBox(height: 24),
-                          Text(
-                            "LA TRADIZIONE PROFUMA DI CASA",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.cinzel(
-                              color: Colors.white,
-                              fontSize: isMobile ? 16 : 22,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 2,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withValues(alpha: 0.5),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 60),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxWidth: isMobile ? double.infinity : 600),
-                      child: Wrap(
-                        spacing: 24,
-                        runSpacing: 16,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          _ResponsiveHeroButton(
-                            label: "IL NOSTRO MENÙ",
-                            baseColor: AppTheme.gold,
-                            isMobile: isMobile,
-                            onPressed: () => context.push('/menu'),
-                          ),
-                          _ResponsiveHeroButton(
-                            label: "SPEDIZIONI NAZIONALI",
-                            baseColor: AppTheme.accent,
-                            isMobile: isMobile,
-                            onPressed: () => context.push('/shop'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

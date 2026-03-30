@@ -26,6 +26,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
   String? selectedCategory;
   String searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
+  ServiceType? _serviceFilter; // null = Tutti
 
   final Map<String, IconData> allergenIcons = {
     'Glutine': Icons.grain,
@@ -33,6 +34,9 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     'Frutta a guscio': Icons.eco,
     'Uova': Icons.egg,
     'Pesce': Icons.phishing,
+    'Soia': Icons.bakery_dining,
+    'Sedano': Icons.grass,
+    'Senape': Icons.commit,
   };
 
   @override
@@ -52,6 +56,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
     final viewHeight = MediaQuery.of(context).size.height;
     final cartItems = ref.watch(cartProvider);
+    final cartType = ref.read(cartProvider.notifier).cartType;
     final menuAsync = ref.watch(menuProvider);
 
     return Scaffold(
@@ -78,7 +83,6 @@ class _MenuPageState extends ConsumerState<MenuPage> {
           menuAsync.when(
             data: (menuData) {
               if (selectedCategory == null && menuData.isNotEmpty) {
-                // Initialize selection on first load
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted && selectedCategory == null) {
                     setState(() => selectedCategory = menuData.first['title']);
@@ -90,6 +94,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 140),
+                    if (cartType == ProductType.shipping) _buildCartConflictBanner(),
                     Text(
                       "IL NOSTRO MENÙ",
                       style: AppTheme.menuCategoryTitle.copyWith(
@@ -102,6 +107,8 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                     _buildSearchBar(isMobile),
                     const SizedBox(height: 20),
                     _buildCategorySelector(isMobile, menuData),
+                    const SizedBox(height: 20),
+                    _buildServiceFilter(isMobile),
                     const SizedBox(height: 30),
                     if (!isMobile) _buildLegend(false),
                     const SizedBox(height: 20),
@@ -122,10 +129,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "ERRORE: $err",
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                  Text("ERRORE: $err", style: const TextStyle(color: Colors.white)),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => ref.read(menuProvider.notifier).refresh(),
@@ -136,7 +140,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
             ),
           ),
           if (cartItems.isNotEmpty)
-            Positioned(bottom: 30, left: 20, child: _buildCartFAB(ref)),
+            Positioned(bottom: 30, left: 20, child: _buildCartFAB()),
           if (isMobile)
             Positioned(
               bottom: 30,
@@ -153,7 +157,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     );
   }
 
-  Widget _buildCartFAB(WidgetRef ref) {
+  Widget _buildCartFAB() {
     final count = ref.watch(cartProvider.notifier).totalItemsCount;
     final total = ref.watch(cartProvider.notifier).totalCartPrice;
 
@@ -343,9 +347,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: cart.isEmpty
-                        ? null
-                        : () => context.push('/checkout'),
+                    onPressed: cart.isEmpty ? null : () => context.push('/checkout'),
                     child: const Text("PROCEDI AL CHECKOUT"),
                   ),
                 ),
@@ -393,45 +395,115 @@ class _MenuPageState extends ConsumerState<MenuPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: menuData.map((cat) {
+        children: menuData.asMap().entries.map((entry) {
+          final index = entry.key;
+          final cat = entry.value;
           bool isSelected = selectedCategory == cat['title'];
-          return GestureDetector(
-            onTap: () => setState(() => selectedCategory = cat['title']),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  Container(
-                    height: isMobile ? 110 : 160,
-                    width: isMobile ? 110 : 160,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected
-                            ? AppTheme.accent
-                            : Colors.transparent,
-                        width: 3,
+          bool isAsporto = cat['title'].toString().toUpperCase() == "ASPORTO";
+          bool isLast = index == menuData.length - 1;
+
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isAsporto && isLast && index > 0)
+                Container(
+                  height: 60,
+                  width: 1,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  color: Colors.black.withValues(alpha: 0.2),
+                ),
+              GestureDetector(
+                onTap: () => setState(() => selectedCategory = cat['title']),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: isMobile ? 110 : 160,
+                        width: isMobile ? 110 : 160,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected ? AppTheme.accent : Colors.transparent,
+                            width: 3,
+                          ),
+                          image: DecorationImage(
+                            image: AssetImage(cat['image']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      image: DecorationImage(
-                        image: AssetImage(cat['image']),
-                        fit: BoxFit.cover,
+                      const SizedBox(height: 12),
+                      Text(
+                        cat['title'].toString().toUpperCase(),
+                        style: AppTheme.menuTitle.copyWith(
+                          fontSize: 12,
+                          color: isSelected ? AppTheme.accent : AppTheme.text,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    cat['title'].toString().toUpperCase(),
-                    style: AppTheme.menuTitle.copyWith(
-                      fontSize: 12,
-                      color: isSelected ? AppTheme.accent : AppTheme.text,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           );
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildCartConflictBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      margin: const EdgeInsets.only(bottom: 30),
+      color: Colors.red.withValues(alpha: 0.8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: Colors.white),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              "Hai prodotti da spedizione nel carrello. Non puoi aggiungere piatti dal menù locale senza prima svuotarlo o completare l'acquisto.",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+          TextButton(
+            onPressed: () => ref.read(cartProvider.notifier).clearCart(),
+            child: const Text("SVUOTA", style: TextStyle(color: Colors.white, decoration: TextDecoration.underline)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceFilter(bool isMobile) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _filterChip("TUTTI", null),
+          const SizedBox(width: 12),
+          _filterChip("AL TAVOLO", ServiceType.atTable),
+          const SizedBox(width: 12),
+          _filterChip("ASPORTO / BOX", ServiceType.takeaway),
+        ],
+      ),
+    );
+  }
+
+  Widget _filterChip(String label, ServiceType? type) {
+    bool isSelected = _serviceFilter == type;
+    return ChoiceChip(
+      label: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : AppTheme.text)),
+      selected: isSelected,
+      onSelected: (val) {
+        if (val) setState(() => _serviceFilter = type);
+      },
+      selectedColor: AppTheme.accent,
+      backgroundColor: AppTheme.cardBg,
     );
   }
 
@@ -453,25 +525,27 @@ class _MenuPageState extends ConsumerState<MenuPage> {
       allProductsCombined = category['items'] as List<Product>;
     }
 
-    final filtered = allProductsCombined
-        .where(
-          (p) =>
-              p.name.toLowerCase().contains(searchQuery) ||
-              p.description.toLowerCase().contains(searchQuery),
-        )
-        .toList();
+    // Applichiamo i filtri
+    final filtered = allProductsCombined.where((p) {
+      final matchesSearch = p.name.toLowerCase().contains(searchQuery) ||
+          p.description.toLowerCase().contains(searchQuery);
+      final matchesService = _serviceFilter == null || 
+          p.serviceType == _serviceFilter || 
+          p.serviceType == ServiceType.both;
+      return matchesSearch && matchesService;
+    }).toList();
 
     return Column(
       children: filtered.asMap().entries.map((entry) {
         final product = entry.value;
         return TweenAnimationBuilder(
-          key: ValueKey(product.name + searchQuery),
-          duration: Duration(milliseconds: 400 + (entry.key * 100)),
+          key: ValueKey("${product.name}_${searchQuery}_$_serviceFilter"),
+          duration: Duration(milliseconds: 300 + (entry.key * 50)),
           tween: Tween<double>(begin: 0, end: 1),
           builder: (context, value, child) => Opacity(
             opacity: value,
             child: Transform.translate(
-              offset: Offset(0, 20 * (1 - value)),
+              offset: Offset(0, 15 * (1 - value)),
               child: child,
             ),
           ),
