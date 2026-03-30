@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme.dart';
 import '../../../../core/widgets/app_buttons.dart';
 import 'soul_card.dart';
@@ -49,6 +50,28 @@ class _ServicesState extends State<Services> {
       "imagePath": "assets/images/homepage/products.jpg",
     },
   ];
+
+  void _onSoulTap(BuildContext context, String title) {
+    switch (title) {
+      case "A Tavola":
+        context.push('/menu?category=Pizze');
+        break;
+      case "Take Away":
+        context.push('/menu?category=Box');
+        break;
+      case "Gastronomia":
+        context.push('/menu?category=Gastronomia');
+        break;
+      case "Rosticceria":
+        context.push('/menu?category=Rosticceria');
+        break;
+      case "Shop Online":
+        context.push('/shop');
+        break;
+      default:
+        context.push('/menu');
+    }
+  }
 
   @override
   void initState() {
@@ -121,7 +144,7 @@ class _ServicesState extends State<Services> {
                         title: data["title"]!,
                         description: data["description"]!,
                         imagePath: data["imagePath"]!,
-                        onTap: () {},
+                        onTap: () => _onSoulTap(context, data["title"]!),
                         isMobile: false,
                       ))
                   .toList(),
@@ -147,7 +170,7 @@ class _ServicesState extends State<Services> {
                             title: data["title"]!,
                             description: data["description"]!,
                             imagePath: data["imagePath"]!,
-                            onTap: () {},
+                            onTap: () => _onSoulTap(context, data["title"]!),
                             isMobile: true,
                           ),
                         ),

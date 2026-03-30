@@ -131,7 +131,7 @@ class HeroSection extends StatelessWidget {
                             label: "ORDINA A CASA",
                             baseColor: AppTheme.secondary,
                             isMobile: isMobile,
-                            onPressed: () {},
+                            onPressed: () => context.push('/menu'),
                           ),
                         ],
                       ),

@@ -59,8 +59,8 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                       children: [
                         _NavButton(label: "IL MENÙ", onTap: () => context.push('/menu')),
                         _NavButton(label: "SPEDIZIONI", onTap: () => context.push('/spedizioni')),
-                        _NavButton(label: "LAVORA CON NOI", onTap: () {}),
-                        _NavButton(label: "CONTATTI", onTap: () {}),
+                        _NavButton(label: "LAVORA CON NOI", onTap: () => context.push('/lavora-con-noi')),
+                        _NavButton(label: "CONTATTI", onTap: () => context.push('/contatti')),
                       ],
                     ),
                   ),

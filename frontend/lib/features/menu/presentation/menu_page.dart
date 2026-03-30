@@ -13,7 +13,8 @@ import 'providers/menu_notifier.dart';
 // --- UI (PRESENTATION) ---
 
 class MenuPage extends ConsumerStatefulWidget {
-  const MenuPage({super.key});
+  final String? initialCategory;
+  const MenuPage({super.key, this.initialCategory});
 
   @override
   ConsumerState<MenuPage> createState() => _MenuPageState();
@@ -32,6 +33,12 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     'Uova': Icons.egg,
     'Pesce': Icons.phishing,
   };
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = widget.initialCategory;
+  }
 
   @override
   void dispose() {
