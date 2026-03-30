@@ -84,6 +84,20 @@ class _ServicesState extends State<Services> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final isMobile = ResponsiveBreakpoints.of(context).isMobile;
+    final isTablet = ResponsiveBreakpoints.of(context).isTablet;
+    double fraction = isMobile ? 0.85 : (isTablet ? 0.45 : 0.33);
+    
+    // Inizializziamo o aggiorniamo il controller se la frazione cambia
+    _pageController = PageController(
+      viewportFraction: fraction,
+      initialPage: _virtualCurrentPage,
+    );
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
@@ -134,68 +148,52 @@ class _ServicesState extends State<Services> {
                 ),
           ),
           SizedBox(height: isMobile ? 60 : 100),
-          if (!isMobile) // Solo se NON è mobile (quindi Tablet e Desktop)
-            Wrap(
-              spacing: 40,
-              runSpacing: 40,
-              alignment: WrapAlignment.center,
-              children: _soulsData
-                  .map((data) => SoulCard(
-                        title: data["title"]!,
-                        description: data["description"]!,
-                        imagePath: data["imagePath"]!,
-                        onTap: () => _onSoulTap(context, data["title"]!),
-                        isMobile: false,
-                      ))
-                  .toList(),
-            )
-          else
-            // Solo Mobile Carousel
-            Column(
-              key: const ValueKey("carousel_section"),
-              children: [
-                SizedBox(
-                  height: 540,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) =>
-                        setState(() => _virtualCurrentPage = index),
-                    itemBuilder: (context, index) {
-                      final actualIndex = index % _soulsData.length;
-                      final data = _soulsData[actualIndex];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Center(
-                          child: SoulCard(
-                            title: data["title"]!,
-                            description: data["description"]!,
-                            imagePath: data["imagePath"]!,
-                            onTap: () => _onSoulTap(context, data["title"]!),
-                            isMobile: true,
-                          ),
+          // Carousel per tutti i dispositivi
+          Column(
+            key: const ValueKey("carousel_section"),
+            children: [
+              SizedBox(
+                height: 540,
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) =>
+                      setState(() => _virtualCurrentPage = index),
+                  itemBuilder: (context, index) {
+                    final actualIndex = index % _soulsData.length;
+                    final data = _soulsData[actualIndex];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Center(
+                        child: SoulCard(
+                          title: data["title"]!,
+                          description: data["description"]!,
+                          imagePath: data["imagePath"]!,
+                          onTap: () => _onSoulTap(context, data["title"]!),
+                          isMobile: isMobile,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SquareIconButton(
+                    icon: Icons.chevron_left,
+                    onPressed:
+                        _previousPage, // Sempre attivo con loop infinito
                   ),
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SquareIconButton(
-                      icon: Icons.chevron_left,
-                      onPressed:
-                          _previousPage, // Sempre attivo con loop infinito
-                    ),
-                    const SizedBox(width: 20),
-                    SquareIconButton(
-                      icon: Icons.chevron_right,
-                      onPressed: _nextPage,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  const SizedBox(width: 20),
+                  SquareIconButton(
+                    icon: Icons.chevron_right,
+                    onPressed: _nextPage,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );

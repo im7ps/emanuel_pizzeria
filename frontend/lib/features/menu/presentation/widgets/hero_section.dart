@@ -109,7 +109,7 @@ class HeroSection extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                          maxWidth: isMobile ? double.infinity : 1000),
+                          maxWidth: isMobile ? double.infinity : 600),
                       child: Wrap(
                         spacing: 24,
                         runSpacing: 16,
@@ -122,16 +122,10 @@ class HeroSection extends StatelessWidget {
                             onPressed: () => context.push('/menu'),
                           ),
                           _ResponsiveHeroButton(
-                            label: "PRENOTA UN TAVOLO",
+                            label: "SPEDIZIONI NAZIONALI",
                             baseColor: AppTheme.accent,
                             isMobile: isMobile,
-                            onPressed: () => context.push('/bookings'),
-                          ),
-                          _ResponsiveHeroButton(
-                            label: "ORDINA A CASA",
-                            baseColor: AppTheme.secondary,
-                            isMobile: isMobile,
-                            onPressed: () => context.push('/menu'),
+                            onPressed: () => context.push('/shop'),
                           ),
                         ],
                       ),
@@ -163,7 +157,7 @@ class _ResponsiveHeroButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: isMobile ? double.infinity : 240,
+      width: isMobile ? double.infinity : 280,
       child: HoverButton(
         label: label,
         baseColor: baseColor,

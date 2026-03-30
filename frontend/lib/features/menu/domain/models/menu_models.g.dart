@@ -34,6 +34,12 @@ _Product _$ProductFromJson(Map<String, dynamic> json) => _Product(
   isBestSeller: json['isBestSeller'] as bool? ?? false,
   isVeg: json['isVeg'] as bool? ?? false,
   isHot: json['isHot'] as bool? ?? false,
+  type:
+      $enumDecodeNullable(_$ProductTypeEnumMap, json['type']) ??
+      ProductType.local,
+  serviceType:
+      $enumDecodeNullable(_$ServiceTypeEnumMap, json['serviceType']) ??
+      ServiceType.both,
 );
 
 Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
@@ -48,4 +54,17 @@ Map<String, dynamic> _$ProductToJson(_Product instance) => <String, dynamic>{
   'isBestSeller': instance.isBestSeller,
   'isVeg': instance.isVeg,
   'isHot': instance.isHot,
+  'type': _$ProductTypeEnumMap[instance.type]!,
+  'serviceType': _$ServiceTypeEnumMap[instance.serviceType]!,
+};
+
+const _$ProductTypeEnumMap = {
+  ProductType.local: 'local',
+  ProductType.shipping: 'shipping',
+};
+
+const _$ServiceTypeEnumMap = {
+  ServiceType.atTable: 'atTable',
+  ServiceType.takeaway: 'takeaway',
+  ServiceType.both: 'both',
 };

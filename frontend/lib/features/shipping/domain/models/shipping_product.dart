@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../../features/menu/domain/models/menu_models.dart';
 
 part 'shipping_product.freezed.dart';
 part 'shipping_product.g.dart';
@@ -16,6 +17,20 @@ abstract class ShippingProduct with _$ShippingProduct {
     @Default(0) int stockQuantity,
     required String categoryId,
   }) = _ShippingProduct;
+
+  const ShippingProduct._();
+
+  Product toProduct() {
+    return Product(
+      name: name,
+      description: description,
+      basePrice: price,
+      image: imageUrl,
+      allergens: [],
+      baseIngredients: [],
+      type: ProductType.shipping,
+    );
+  }
 
   factory ShippingProduct.fromJson(Map<String, dynamic> json) =>
       _$ShippingProductFromJson(json);

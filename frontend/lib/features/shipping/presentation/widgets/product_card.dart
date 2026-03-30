@@ -1,14 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:emanuel_pizzeria/core/theme.dart';
-import 'package:emanuel_pizzeria/features/shipping/domain/models/shipping_product.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme.dart';
+import '../../../menu/domain/models/menu_models.dart';
+import '../../../menu/presentation/providers/cart_notifier.dart';
+import '../../domain/models/shipping_product.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends ConsumerWidget {
   final ShippingProduct product;
 
   const ProductCard({super.key, required this.product});
 
+  void _showConflictDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("ORDINE MISTO NON CONSENTITO"),
+        content: const Text(
+          "Hai già degli articoli nel carrello per il menù locale. "
+          "Non è possibile effettuare ordini misti (Locale + Spedizione). "
+          "Svuota il carrello o concludi l'ordine corrente prima di aggiungere prodotti da spedire.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK", style: TextStyle(color: AppTheme.accent)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.cardBg,
@@ -67,7 +90,19 @@ class ProductCard extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // TODO: Add to cart logic
+                            final success = ref.read(cartProvider.notifier).addItem(
+                              CartItem(product: product.toProduct(), quantity: 1),
+                            );
+                            if (!success) {
+                              _showConflictDialog(context);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Aggiunto al carrello"),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(

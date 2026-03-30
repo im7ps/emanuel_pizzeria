@@ -181,6 +181,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
               bottom: 30,
               right: 20,
               child: FloatingActionButton(
+                heroTag: "booking_info_fab",
                 backgroundColor: AppTheme.accent,
                 onPressed: () => _showLegendPopup(context),
                 child: const Icon(Icons.info_outline, color: Colors.white),

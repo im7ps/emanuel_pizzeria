@@ -13,6 +13,9 @@ abstract class Ingredient with _$Ingredient {
   factory Ingredient.fromJson(Map<String, dynamic> json) => _$IngredientFromJson(json);
 }
 
+enum ProductType { local, shipping }
+enum ServiceType { atTable, takeaway, both }
+
 @freezed
 abstract class Product with _$Product {
   const factory Product({
@@ -27,6 +30,8 @@ abstract class Product with _$Product {
     @Default(false) bool isBestSeller,
     @Default(false) bool isVeg,
     @Default(false) bool isHot,
+    @Default(ProductType.local) ProductType type,
+    @Default(ServiceType.both) ServiceType serviceType,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);

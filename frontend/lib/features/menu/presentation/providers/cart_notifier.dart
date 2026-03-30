@@ -8,8 +8,17 @@ class Cart extends _$Cart {
   @override
   List<CartItem> build() => [];
 
-  void addItem(CartItem item) {
+  ProductType? get cartType {
+    if (state.isEmpty) return null;
+    return state.first.product.type;
+  }
+
+  bool addItem(CartItem item) {
+    if (state.isNotEmpty && state.first.product.type != item.product.type) {
+      return false; // Type mismatch
+    }
     state = [...state, item];
+    return true;
   }
 
   void removeItem(int index) {

@@ -281,7 +281,7 @@ as double,
 /// @nodoc
 mixin _$Product {
 
- String get name; String get description; double get basePrice; String get image; double get rating; List<String> get allergens; List<Ingredient> get baseIngredients; List<Ingredient> get extraOptions; bool get isBestSeller; bool get isVeg; bool get isHot;
+ String get name; String get description; double get basePrice; String get image; double get rating; List<String> get allergens; List<Ingredient> get baseIngredients; List<Ingredient> get extraOptions; bool get isBestSeller; bool get isVeg; bool get isHot; ProductType get type; ServiceType get serviceType;
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +294,16 @@ $ProductCopyWith<Product> get copyWith => _$ProductCopyWithImpl<Product>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.image, image) || other.image == image)&&(identical(other.rating, rating) || other.rating == rating)&&const DeepCollectionEquality().equals(other.allergens, allergens)&&const DeepCollectionEquality().equals(other.baseIngredients, baseIngredients)&&const DeepCollectionEquality().equals(other.extraOptions, extraOptions)&&(identical(other.isBestSeller, isBestSeller) || other.isBestSeller == isBestSeller)&&(identical(other.isVeg, isVeg) || other.isVeg == isVeg)&&(identical(other.isHot, isHot) || other.isHot == isHot));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Product&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.image, image) || other.image == image)&&(identical(other.rating, rating) || other.rating == rating)&&const DeepCollectionEquality().equals(other.allergens, allergens)&&const DeepCollectionEquality().equals(other.baseIngredients, baseIngredients)&&const DeepCollectionEquality().equals(other.extraOptions, extraOptions)&&(identical(other.isBestSeller, isBestSeller) || other.isBestSeller == isBestSeller)&&(identical(other.isVeg, isVeg) || other.isVeg == isVeg)&&(identical(other.isHot, isHot) || other.isHot == isHot)&&(identical(other.type, type) || other.type == type)&&(identical(other.serviceType, serviceType) || other.serviceType == serviceType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,description,basePrice,image,rating,const DeepCollectionEquality().hash(allergens),const DeepCollectionEquality().hash(baseIngredients),const DeepCollectionEquality().hash(extraOptions),isBestSeller,isVeg,isHot);
+int get hashCode => Object.hash(runtimeType,name,description,basePrice,image,rating,const DeepCollectionEquality().hash(allergens),const DeepCollectionEquality().hash(baseIngredients),const DeepCollectionEquality().hash(extraOptions),isBestSeller,isVeg,isHot,type,serviceType);
 
 @override
 String toString() {
-  return 'Product(name: $name, description: $description, basePrice: $basePrice, image: $image, rating: $rating, allergens: $allergens, baseIngredients: $baseIngredients, extraOptions: $extraOptions, isBestSeller: $isBestSeller, isVeg: $isVeg, isHot: $isHot)';
+  return 'Product(name: $name, description: $description, basePrice: $basePrice, image: $image, rating: $rating, allergens: $allergens, baseIngredients: $baseIngredients, extraOptions: $extraOptions, isBestSeller: $isBestSeller, isVeg: $isVeg, isHot: $isHot, type: $type, serviceType: $serviceType)';
 }
 
 
@@ -314,7 +314,7 @@ abstract mixin class $ProductCopyWith<$Res>  {
   factory $ProductCopyWith(Product value, $Res Function(Product) _then) = _$ProductCopyWithImpl;
 @useResult
 $Res call({
- String name, String description, double basePrice, String image, double rating, List<String> allergens, List<Ingredient> baseIngredients, List<Ingredient> extraOptions, bool isBestSeller, bool isVeg, bool isHot
+ String name, String description, double basePrice, String image, double rating, List<String> allergens, List<Ingredient> baseIngredients, List<Ingredient> extraOptions, bool isBestSeller, bool isVeg, bool isHot, ProductType type, ServiceType serviceType
 });
 
 
@@ -331,7 +331,7 @@ class _$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,Object? basePrice = null,Object? image = null,Object? rating = null,Object? allergens = null,Object? baseIngredients = null,Object? extraOptions = null,Object? isBestSeller = null,Object? isVeg = null,Object? isHot = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,Object? basePrice = null,Object? image = null,Object? rating = null,Object? allergens = null,Object? baseIngredients = null,Object? extraOptions = null,Object? isBestSeller = null,Object? isVeg = null,Object? isHot = null,Object? type = null,Object? serviceType = null,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -344,7 +344,9 @@ as List<Ingredient>,extraOptions: null == extraOptions ? _self.extraOptions : ex
 as List<Ingredient>,isBestSeller: null == isBestSeller ? _self.isBestSeller : isBestSeller // ignore: cast_nullable_to_non_nullable
 as bool,isVeg: null == isVeg ? _self.isVeg : isVeg // ignore: cast_nullable_to_non_nullable
 as bool,isHot: null == isHot ? _self.isHot : isHot // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ProductType,serviceType: null == serviceType ? _self.serviceType : serviceType // ignore: cast_nullable_to_non_nullable
+as ServiceType,
   ));
 }
 
@@ -429,10 +431,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String description,  double basePrice,  String image,  double rating,  List<String> allergens,  List<Ingredient> baseIngredients,  List<Ingredient> extraOptions,  bool isBestSeller,  bool isVeg,  bool isHot)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String description,  double basePrice,  String image,  double rating,  List<String> allergens,  List<Ingredient> baseIngredients,  List<Ingredient> extraOptions,  bool isBestSeller,  bool isVeg,  bool isHot,  ProductType type,  ServiceType serviceType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Product() when $default != null:
-return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.rating,_that.allergens,_that.baseIngredients,_that.extraOptions,_that.isBestSeller,_that.isVeg,_that.isHot);case _:
+return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.rating,_that.allergens,_that.baseIngredients,_that.extraOptions,_that.isBestSeller,_that.isVeg,_that.isHot,_that.type,_that.serviceType);case _:
   return orElse();
 
 }
@@ -450,10 +452,10 @@ return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.r
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String description,  double basePrice,  String image,  double rating,  List<String> allergens,  List<Ingredient> baseIngredients,  List<Ingredient> extraOptions,  bool isBestSeller,  bool isVeg,  bool isHot)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String description,  double basePrice,  String image,  double rating,  List<String> allergens,  List<Ingredient> baseIngredients,  List<Ingredient> extraOptions,  bool isBestSeller,  bool isVeg,  bool isHot,  ProductType type,  ServiceType serviceType)  $default,) {final _that = this;
 switch (_that) {
 case _Product():
-return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.rating,_that.allergens,_that.baseIngredients,_that.extraOptions,_that.isBestSeller,_that.isVeg,_that.isHot);case _:
+return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.rating,_that.allergens,_that.baseIngredients,_that.extraOptions,_that.isBestSeller,_that.isVeg,_that.isHot,_that.type,_that.serviceType);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -470,10 +472,10 @@ return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.r
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String description,  double basePrice,  String image,  double rating,  List<String> allergens,  List<Ingredient> baseIngredients,  List<Ingredient> extraOptions,  bool isBestSeller,  bool isVeg,  bool isHot)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String description,  double basePrice,  String image,  double rating,  List<String> allergens,  List<Ingredient> baseIngredients,  List<Ingredient> extraOptions,  bool isBestSeller,  bool isVeg,  bool isHot,  ProductType type,  ServiceType serviceType)?  $default,) {final _that = this;
 switch (_that) {
 case _Product() when $default != null:
-return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.rating,_that.allergens,_that.baseIngredients,_that.extraOptions,_that.isBestSeller,_that.isVeg,_that.isHot);case _:
+return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.rating,_that.allergens,_that.baseIngredients,_that.extraOptions,_that.isBestSeller,_that.isVeg,_that.isHot,_that.type,_that.serviceType);case _:
   return null;
 
 }
@@ -485,7 +487,7 @@ return $default(_that.name,_that.description,_that.basePrice,_that.image,_that.r
 @JsonSerializable()
 
 class _Product implements Product {
-  const _Product({required this.name, required this.description, required this.basePrice, required this.image, this.rating = 5.0, required final  List<String> allergens, required final  List<Ingredient> baseIngredients, final  List<Ingredient> extraOptions = const [], this.isBestSeller = false, this.isVeg = false, this.isHot = false}): _allergens = allergens,_baseIngredients = baseIngredients,_extraOptions = extraOptions;
+  const _Product({required this.name, required this.description, required this.basePrice, required this.image, this.rating = 5.0, required final  List<String> allergens, required final  List<Ingredient> baseIngredients, final  List<Ingredient> extraOptions = const [], this.isBestSeller = false, this.isVeg = false, this.isHot = false, this.type = ProductType.local, this.serviceType = ServiceType.both}): _allergens = allergens,_baseIngredients = baseIngredients,_extraOptions = extraOptions;
   factory _Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 
 @override final  String name;
@@ -517,6 +519,8 @@ class _Product implements Product {
 @override@JsonKey() final  bool isBestSeller;
 @override@JsonKey() final  bool isVeg;
 @override@JsonKey() final  bool isHot;
+@override@JsonKey() final  ProductType type;
+@override@JsonKey() final  ServiceType serviceType;
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
@@ -531,16 +535,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.image, image) || other.image == image)&&(identical(other.rating, rating) || other.rating == rating)&&const DeepCollectionEquality().equals(other._allergens, _allergens)&&const DeepCollectionEquality().equals(other._baseIngredients, _baseIngredients)&&const DeepCollectionEquality().equals(other._extraOptions, _extraOptions)&&(identical(other.isBestSeller, isBestSeller) || other.isBestSeller == isBestSeller)&&(identical(other.isVeg, isVeg) || other.isVeg == isVeg)&&(identical(other.isHot, isHot) || other.isHot == isHot));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Product&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.image, image) || other.image == image)&&(identical(other.rating, rating) || other.rating == rating)&&const DeepCollectionEquality().equals(other._allergens, _allergens)&&const DeepCollectionEquality().equals(other._baseIngredients, _baseIngredients)&&const DeepCollectionEquality().equals(other._extraOptions, _extraOptions)&&(identical(other.isBestSeller, isBestSeller) || other.isBestSeller == isBestSeller)&&(identical(other.isVeg, isVeg) || other.isVeg == isVeg)&&(identical(other.isHot, isHot) || other.isHot == isHot)&&(identical(other.type, type) || other.type == type)&&(identical(other.serviceType, serviceType) || other.serviceType == serviceType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,description,basePrice,image,rating,const DeepCollectionEquality().hash(_allergens),const DeepCollectionEquality().hash(_baseIngredients),const DeepCollectionEquality().hash(_extraOptions),isBestSeller,isVeg,isHot);
+int get hashCode => Object.hash(runtimeType,name,description,basePrice,image,rating,const DeepCollectionEquality().hash(_allergens),const DeepCollectionEquality().hash(_baseIngredients),const DeepCollectionEquality().hash(_extraOptions),isBestSeller,isVeg,isHot,type,serviceType);
 
 @override
 String toString() {
-  return 'Product(name: $name, description: $description, basePrice: $basePrice, image: $image, rating: $rating, allergens: $allergens, baseIngredients: $baseIngredients, extraOptions: $extraOptions, isBestSeller: $isBestSeller, isVeg: $isVeg, isHot: $isHot)';
+  return 'Product(name: $name, description: $description, basePrice: $basePrice, image: $image, rating: $rating, allergens: $allergens, baseIngredients: $baseIngredients, extraOptions: $extraOptions, isBestSeller: $isBestSeller, isVeg: $isVeg, isHot: $isHot, type: $type, serviceType: $serviceType)';
 }
 
 
@@ -551,7 +555,7 @@ abstract mixin class _$ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$ProductCopyWith(_Product value, $Res Function(_Product) _then) = __$ProductCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String description, double basePrice, String image, double rating, List<String> allergens, List<Ingredient> baseIngredients, List<Ingredient> extraOptions, bool isBestSeller, bool isVeg, bool isHot
+ String name, String description, double basePrice, String image, double rating, List<String> allergens, List<Ingredient> baseIngredients, List<Ingredient> extraOptions, bool isBestSeller, bool isVeg, bool isHot, ProductType type, ServiceType serviceType
 });
 
 
@@ -568,7 +572,7 @@ class __$ProductCopyWithImpl<$Res>
 
 /// Create a copy of Product
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? description = null,Object? basePrice = null,Object? image = null,Object? rating = null,Object? allergens = null,Object? baseIngredients = null,Object? extraOptions = null,Object? isBestSeller = null,Object? isVeg = null,Object? isHot = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? description = null,Object? basePrice = null,Object? image = null,Object? rating = null,Object? allergens = null,Object? baseIngredients = null,Object? extraOptions = null,Object? isBestSeller = null,Object? isVeg = null,Object? isHot = null,Object? type = null,Object? serviceType = null,}) {
   return _then(_Product(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -581,7 +585,9 @@ as List<Ingredient>,extraOptions: null == extraOptions ? _self._extraOptions : e
 as List<Ingredient>,isBestSeller: null == isBestSeller ? _self.isBestSeller : isBestSeller // ignore: cast_nullable_to_non_nullable
 as bool,isVeg: null == isVeg ? _self.isVeg : isVeg // ignore: cast_nullable_to_non_nullable
 as bool,isHot: null == isHot ? _self.isHot : isHot // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as ProductType,serviceType: null == serviceType ? _self.serviceType : serviceType // ignore: cast_nullable_to_non_nullable
+as ServiceType,
   ));
 }
 

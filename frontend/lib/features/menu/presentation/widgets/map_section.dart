@@ -4,8 +4,15 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme.dart';
 
-class MapSection extends StatelessWidget {
+class MapSection extends StatefulWidget {
   const MapSection({super.key});
+
+  @override
+  State<MapSection> createState() => _MapSectionState();
+}
+
+class _MapSectionState extends State<MapSection> {
+  bool _isInteracting = false;
 
   // Coordinate esatte della pizzeria
   static const LatLng _pizzeriaLocation = LatLng(38.071914, 15.658033);
@@ -37,11 +44,13 @@ class MapSection extends StatelessWidget {
       child: Stack(
         children: [
           FlutterMap(
-            options: const MapOptions(
+            options: MapOptions(
               initialCenter: _pizzeriaLocation,
               initialZoom: 16.5,
               interactionOptions: InteractionOptions(
-                flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                flags: _isInteracting 
+                    ? (InteractiveFlag.all & ~InteractiveFlag.rotate)
+                    : InteractiveFlag.none,
               ),
             ),
             children: [
@@ -71,10 +80,33 @@ class MapSection extends StatelessWidget {
               ),
             ],
           ),
+          if (!_isInteracting)
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => setState(() => _isInteracting = true),
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "Clicca per attivare la mappa",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           Positioned(
             top: 20,
             right: 20,
             child: FloatingActionButton.small(
+              heroTag: "map_external_fab",
               backgroundColor: Colors.white,
               elevation: 4,
               onPressed: _openExternalMaps,

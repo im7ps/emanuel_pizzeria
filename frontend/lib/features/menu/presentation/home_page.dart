@@ -76,6 +76,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: _showBackToTop
           ? FloatingActionButton(
+              heroTag: "home_scroll_top_fab",
               onPressed: _scrollToTop,
               backgroundColor: AppTheme.accent,
               child: const Icon(Icons.arrow_upward, color: Colors.white),

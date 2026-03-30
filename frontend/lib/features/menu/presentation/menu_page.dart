@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import '../../../core/theme.dart';
@@ -121,7 +122,10 @@ class _MenuPageState extends ConsumerState<MenuPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("ERRORE: $err", style: const TextStyle(color: Colors.white)),
+                  Text(
+                    "ERRORE: $err",
+                    style: const TextStyle(color: Colors.white),
+                  ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => ref.read(menuProvider.notifier).refresh(),
@@ -138,7 +142,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
               bottom: 30,
               right: 20,
               child: FloatingActionButton(
-                heroTag: "info",
+                heroTag: "menu_info_fab",
                 backgroundColor: AppTheme.accent,
                 onPressed: () => _showLegendPopup(context),
                 child: const Icon(Icons.info_outline, color: Colors.white),
@@ -209,6 +213,26 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     );
   }
 
+  void _showConflictDialog(BuildContext context, String currentCartType) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("ORDINE MISTO NON CONSENTITO"),
+        content: Text(
+          "Hai già degli articoli nel carrello per ${currentCartType == 'local' ? 'il menù locale' : 'le spedizioni'}. "
+          "Non è possibile effettuare ordini misti. "
+          "Svuota il carrello o concludi l'ordine corrente prima di aggiungere altri prodotti.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK", style: TextStyle(color: AppTheme.accent)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCartDrawer() {
     final cart = ref.watch(cartProvider);
     final total = ref.watch(cartProvider.notifier).totalCartPrice;
@@ -255,7 +279,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                           style: AppTheme.menuTitle.copyWith(fontSize: 16),
                         ),
                         subtitle: Text(
-                          "${item.quantity}x - Personalizzato",
+                          "${item.quantity}x - ${item.product.type == ProductType.local ? 'Locale' : 'Spedizione'}",
                           style: AppTheme.menuIngredients.copyWith(
                             fontSize: 12,
                           ),
@@ -319,7 +343,9 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: cart.isEmpty ? null : () {},
+                    onPressed: cart.isEmpty
+                        ? null
+                        : () => context.push('/checkout'),
                     child: const Text("PROCEDI AL CHECKOUT"),
                   ),
                 ),
@@ -357,7 +383,10 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     );
   }
 
-  Widget _buildCategorySelector(bool isMobile, List<Map<String, dynamic>> menuData) {
+  Widget _buildCategorySelector(
+    bool isMobile,
+    List<Map<String, dynamic>> menuData,
+  ) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
@@ -406,7 +435,11 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     );
   }
 
-  Widget _buildMenuBody(bool isMobile, double viewHeight, List<Map<String, dynamic>> menuData) {
+  Widget _buildMenuBody(
+    bool isMobile,
+    double viewHeight,
+    List<Map<String, dynamic>> menuData,
+  ) {
     List<Product> allProductsCombined = [];
     if (searchQuery.isNotEmpty) {
       for (var cat in menuData) {
@@ -452,7 +485,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
     return GestureDetector(
       onTap: () => _showProductDetails(context, p),
       child: Container(
-        height: isMobile ? 220 : vh * 0.22,
+        height: isMobile ? 240 : vh * 0.24,
         margin: const EdgeInsets.only(bottom: 24),
         child: ClipRRect(
           child: BackdropFilter(
@@ -483,16 +516,29 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                             ),
                             const SizedBox(height: 4),
                             Row(
-                              children: List.generate(
-                                5,
-                                (index) => Icon(
-                                  Icons.star,
-                                  size: 14,
-                                  color: index < p.rating.floor()
-                                      ? AppTheme.accent
-                                      : Colors.grey.withValues(alpha: 0.3),
+                              children: [
+                                ...List.generate(
+                                  5,
+                                  (index) => Icon(
+                                    Icons.star,
+                                    size: 14,
+                                    color: index < p.rating.floor()
+                                        ? AppTheme.accent
+                                        : Colors.grey.withValues(alpha: 0.3),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 10),
+                                if (p.serviceType != ServiceType.both)
+                                  _cardBadge(
+                                    p.serviceType == ServiceType.atTable 
+                                        ? Icons.restaurant 
+                                        : Icons.takeout_dining,
+                                    p.serviceType == ServiceType.atTable 
+                                        ? "SOLO TAVOLO" 
+                                        : "SOLO ASPORTO",
+                                    AppTheme.secondary,
+                                  ),
+                              ],
                             ),
                           ],
                         ),
@@ -522,6 +568,10 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                         if (p.isVeg) _cardBadge(Icons.eco, "VEG", Colors.green),
                         if (p.isHot)
                           _cardBadge(Icons.whatshot, "HOT", Colors.red),
+                        ...p.allergens.map((a) => Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Icon(allergenIcons[a] ?? Icons.warning, size: 14, color: AppTheme.text.withValues(alpha: 0.5)),
+                        )),
                       ],
                     ),
                   ),
@@ -710,7 +760,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  ref
+                                  final success = ref
                                       .read(cartProvider.notifier)
                                       .addItem(
                                         CartItem(
@@ -720,7 +770,12 @@ class _MenuPageState extends ConsumerState<MenuPage> {
                                           addedExtras: added,
                                         ),
                                       );
+
                                   Navigator.pop(context);
+
+                                  if (!success) {
+                                    _showConflictDialog(context, "shipping");
+                                  }
                                 },
                                 child: const Text("AGGIUNGI AL ORDINE"),
                               ),
@@ -744,7 +799,7 @@ class _MenuPageState extends ConsumerState<MenuPage> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       margin: isPopup
           ? EdgeInsets.zero
-          : const EdgeInsets.symmetric(horizontal: 100),
+          : const EdgeInsets.symmetric(horizontal: 40),
       decoration: isPopup
           ? null
           : BoxDecoration(
@@ -758,10 +813,12 @@ class _MenuPageState extends ConsumerState<MenuPage> {
       child: Wrap(
         alignment: WrapAlignment.center,
         spacing: 20,
+        runSpacing: 10,
         children: [
           _legendItem(Icons.star, "BEST", AppTheme.accent),
           _legendItem(Icons.eco, "VEG", Colors.green),
           _legendItem(Icons.whatshot, "HOT", Colors.red),
+          ...allergenIcons.entries.map((e) => _legendItem(e.value, e.key.toUpperCase(), AppTheme.text.withValues(alpha: 0.6))),
         ],
       ),
     );
