@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme.dart';
+import '../../../../src/core/theme/app_theme.dart';
 import '../../../../core/widgets/app_buttons.dart';
 import 'soul_card.dart';
 
@@ -122,12 +122,15 @@ class _ServicesState extends State<Services> {
 
     return Container(
       width: double.infinity,
-      padding:
-          EdgeInsets.symmetric(vertical: isMobile ? 80 : 140, horizontal: 24),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 80 : 140,
+        horizontal: 24,
+      ),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: const AssetImage(
-              "assets/images/homepage/rock_wall_background_homepage.jpg"),
+            "assets/images/homepage/rock_wall_background_homepage.jpg",
+          ),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             Colors.black.withValues(alpha: 0.45),
@@ -140,11 +143,11 @@ class _ServicesState extends State<Services> {
           Text(
             "COSA FACCIAMO",
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  color: AppTheme.background,
-                  letterSpacing: 8,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                ),
+              color: AppTheme.pBackground,
+              letterSpacing: 8,
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           SizedBox(height: isMobile ? 60 : 100),
           Column(

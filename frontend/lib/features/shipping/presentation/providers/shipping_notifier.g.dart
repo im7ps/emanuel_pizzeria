@@ -33,7 +33,7 @@ final class ShippingNotifierProvider
   ShippingNotifier create() => ShippingNotifier();
 }
 
-String _$shippingNotifierHash() => r'4eabb38748ae97755a2ddc1994c812715a937481';
+String _$shippingNotifierHash() => r'0909fdc6fb0567b5fe236888800acb58f3ea484c';
 
 abstract class _$ShippingNotifier
     extends $AsyncNotifier<List<ShippingProduct>> {
@@ -58,45 +58,3 @@ abstract class _$ShippingNotifier
     element.handleCreate(ref, build);
   }
 }
-
-@ProviderFor(shippingCategories)
-final shippingCategoriesProvider = ShippingCategoriesProvider._();
-
-final class ShippingCategoriesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<ShippingCategory>>,
-          List<ShippingCategory>,
-          FutureOr<List<ShippingCategory>>
-        >
-    with
-        $FutureModifier<List<ShippingCategory>>,
-        $FutureProvider<List<ShippingCategory>> {
-  ShippingCategoriesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'shippingCategoriesProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$shippingCategoriesHash();
-
-  @$internal
-  @override
-  $FutureProviderElement<List<ShippingCategory>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<ShippingCategory>> create(Ref ref) {
-    return shippingCategories(ref);
-  }
-}
-
-String _$shippingCategoriesHash() =>
-    r'52a9314faf49f0a4a6d28fdc68e3a620d0faa4a6';

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import '../../../core/theme.dart';
-import '../../../core/widgets/navbar.dart';
-import '../../../core/widgets/footer.dart';
+import '../../../src/core/theme/app_theme.dart';
+import '../../../src/core/theme/theme_notifier.dart';
 import '../domain/models/booking_models.dart';
 import 'providers/booking_notifier.dart';
 
@@ -49,11 +48,12 @@ class _BookingPageState extends ConsumerState<BookingPage> {
   Widget build(BuildContext context) {
     final isMobile = ResponsiveBreakpoints.of(context).isMobile;
     final tablesAsync = ref.watch(bookingProvider);
+    final mood = ref.watch(themeMoodProvider);
+    final theme = mood == AppMood.pizzeria ? AppTheme.getPizzeriaTheme() : AppTheme.getShopTheme();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: AppTheme.background,
-      appBar: const Navbar(),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -70,9 +70,9 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                           style: GoogleFonts.playfairDisplay(
                               fontSize: isMobile ? 28 : 42,
                               fontWeight: FontWeight.w900,
-                              color: AppTheme.accent)),
+                              color: AppTheme.pAccent)),
                       const SizedBox(height: 12),
-                      Container(height: 3, width: 80, color: AppTheme.gold),
+                      Container(height: 3, width: 80, color: AppTheme.pGold),
                       const SizedBox(height: 40),
                       if (!isMobile) _buildLegend(false),
                       const SizedBox(height: 40),
@@ -92,13 +92,11 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                                     color: const Color(0xFFF0EAD6),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                        color: AppTheme.text
-                                            .withValues(alpha: 0.2),
+                                        color: AppTheme.pText.withValues(alpha: 0.2),
                                         width: 2),
                                     boxShadow: [
                                       BoxShadow(
-                                          color: Colors.black
-                                              .withValues(alpha: 0.1),
+                                          color: Colors.black.withValues(alpha: 0.1),
                                           blurRadius: 30,
                                           offset: const Offset(0, 10))
                                     ],
@@ -112,31 +110,15 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                                               child: Image.asset(
                                                   "assets/images/bookings/marble_floor.jpg",
                                                   fit: BoxFit.cover))),
-
-                                      // MURO SINISTRO CON VARCO ENTRATA
                                       _buildWall(0, 0, 15, mapHeight * 0.35),
-                                      _buildWall(0, mapHeight * 0.65, 15,
-                                          mapHeight * 0.35),
-                                      _buildEntranceLabel(
-                                          0, mapHeight * 0.35, mapHeight * 0.3),
-
-                                      // ALTRI MURI
+                                      _buildWall(0, mapHeight * 0.65, 15, mapHeight * 0.35),
+                                      _buildEntranceLabel(0, mapHeight * 0.35, mapHeight * 0.3),
                                       _buildWall(0, 0, mapWidth, 15),
-                                      _buildServiceArea(mapWidth * 0.75, 0,
-                                          mapWidth * 0.25, 120),
-                                      _buildWall(
-                                          0, mapHeight - 15, mapWidth, 15),
-
-                                      // FINESTRE
-                                      _buildWindow(mapWidth * 0.2,
-                                          mapHeight - 15, mapWidth * 0.2, 15),
-                                      _buildWindow(mapWidth * 0.6,
-                                          mapHeight - 15, mapWidth * 0.2, 15),
-
-                                      _buildKitchenArea(mapWidth - 100, 120,
-                                          100, mapHeight - 120),
-
-                                      // TAVOLI DINAMICI
+                                      _buildServiceArea(mapWidth * 0.75, 0, mapWidth * 0.25, 120),
+                                      _buildWall(0, mapHeight - 15, mapWidth, 15),
+                                      _buildWindow(mapWidth * 0.2, mapHeight - 15, mapWidth * 0.2, 15),
+                                      _buildWindow(mapWidth * 0.6, mapHeight - 15, mapWidth * 0.2, 15),
+                                      _buildKitchenArea(mapWidth - 100, 120, 100, mapHeight - 120),
                                       ...tables.map((table) => _buildTable(
                                           mapWidth * table.x,
                                           mapHeight * table.y,
@@ -172,7 +154,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                     ],
                   ),
                 ),
-                const Footer(),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -182,7 +164,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
               right: 20,
               child: FloatingActionButton(
                 heroTag: "booking_info_fab",
-                backgroundColor: AppTheme.accent,
+                backgroundColor: AppTheme.pAccent,
                 onPressed: () => _showLegendPopup(context),
                 child: const Icon(Icons.info_outline, color: Colors.white),
               ),
@@ -202,8 +184,8 @@ class _BookingPageState extends ConsumerState<BookingPage> {
           ? null
           : BoxDecoration(
               border: Border(
-                top: BorderSide(color: AppTheme.gold.withValues(alpha: 0.3)),
-                bottom: BorderSide(color: AppTheme.gold.withValues(alpha: 0.3)),
+                top: BorderSide(color: AppTheme.pGold.withValues(alpha: 0.3)),
+                bottom: BorderSide(color: AppTheme.pGold.withValues(alpha: 0.3)),
               ),
             ),
       child: Wrap(
@@ -213,8 +195,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
         children: [
           _legendItem(Icons.square, "TAVOLO LIBERO", Colors.green.shade600),
           _legendItem(Icons.square, "TAVOLO OCCUPATO", Colors.red.shade700),
-          _legendItem(Icons.square, "FINESTRE",
-              Colors.blue.shade300), // Richiesto quadrato azzurro
+          _legendItem(Icons.square, "FINESTRE", Colors.blue.shade300),
           _legendItem(Icons.wc, "SERVIZI", Colors.grey.shade400),
         ],
       ),
@@ -232,7 +213,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1,
-                color: AppTheme.text.withValues(alpha: 0.7))),
+                color: AppTheme.pText.withValues(alpha: 0.7))),
       ],
     );
   }
@@ -240,7 +221,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
   void _showLegendPopup(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.pBackground,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => Padding(
@@ -248,7 +229,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("SIMBOLI MAPPA", style: AppTheme.menuTitle),
+            Text("SIMBOLI MAPPA", style: GoogleFonts.playfairDisplay(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.pAccent)),
             const SizedBox(height: 24),
             _buildLegend(true),
             const SizedBox(height: 20),
@@ -279,7 +260,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                 style: GoogleFonts.cinzel(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
-                    color: AppTheme.accent,
+                    color: AppTheme.pAccent,
                     letterSpacing: 2))),
       ),
     );
@@ -339,7 +320,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
       height: height,
       child: Container(
         decoration:
-            BoxDecoration(color: AppTheme.accent.withValues(alpha: 0.05)),
+            BoxDecoration(color: AppTheme.pAccent.withValues(alpha: 0.05)),
         child: Center(
             child: RotatedBox(
           quarterTurns: 1,
@@ -427,7 +408,7 @@ class _SmallChair extends StatelessWidget {
             width: 18,
             height: 12,
             decoration: BoxDecoration(
-                color: AppTheme.text.withValues(alpha: 0.7),
+                color: AppTheme.pText.withValues(alpha: 0.7),
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(4)))));
   }
@@ -461,7 +442,7 @@ class _BookingHero extends StatelessWidget {
           const SizedBox(height: 40),
           Text("PRENOTAZIONI",
               style: GoogleFonts.cinzel(
-                  color: AppTheme.gold,
+                  color: AppTheme.pGold,
                   fontSize: isMobile ? 32 : 56,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 8)),
@@ -594,8 +575,7 @@ class _BookingDialogState extends State<_BookingDialog> {
                                 onPressed: () => Navigator.pop(context),
                                 child: Text("ANNULLA",
                                     style: GoogleFonts.merriweather(
-                                        color: AppTheme.text
-                                            .withValues(alpha: 0.5),
+                                        color: AppTheme.pText.withValues(alpha: 0.5),
                                         fontWeight: FontWeight.bold)))),
                         Expanded(
                             child: ElevatedButton(
@@ -616,7 +596,7 @@ class _BookingDialogState extends State<_BookingDialog> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppTheme.accent),
+                                    backgroundColor: AppTheme.pAccent),
                                 child: const Text("CONFERMA")))
                       ]),
                     ],
@@ -652,12 +632,12 @@ class _DialogField extends StatelessWidget {
             keyboardType: keyboardType,
             decoration: InputDecoration(
                 labelText: label,
-                prefixIcon: Icon(icon, color: AppTheme.gold, size: 20),
+                prefixIcon: Icon(icon, color: AppTheme.pGold, size: 20),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: AppTheme.text.withValues(alpha: 0.1))),
+                        color: AppTheme.pText.withValues(alpha: 0.1))),
                 focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppTheme.accent))),
+                    borderSide: BorderSide(color: AppTheme.pAccent))),
             validator: validator));
   }
 }
@@ -678,11 +658,11 @@ class _DateTimePickerTile extends StatelessWidget {
         contentPadding: EdgeInsets.zero,
         title: Text(label,
             style: GoogleFonts.merriweather(
-                fontSize: 11, color: AppTheme.text.withValues(alpha: 0.5))),
+                fontSize: 11, color: AppTheme.pText.withValues(alpha: 0.5))),
         subtitle: Text(value,
             style: GoogleFonts.merriweather(
                 fontSize: 15, fontWeight: FontWeight.bold)),
-        trailing: Icon(icon, color: AppTheme.gold, size: 20),
+        trailing: Icon(icon, color: AppTheme.pGold, size: 20),
         onTap: onTap);
   }
 }

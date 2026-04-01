@@ -1,39 +1,34 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:emanuel_pizzeria/features/shipping/data/repositories/shipping_repository_impl.dart';
-import 'package:emanuel_pizzeria/features/shipping/domain/models/shipping_product.dart';
+import 'package:emanuel_pizzeria/src/core/network/dio_provider.dart';
+import '../../domain/models/shipping_product.dart';
+import '../../data/repositories/shipping_repository_impl.dart';
 
 part 'shipping_notifier.g.dart';
 
 @riverpod
 class ShippingNotifier extends _$ShippingNotifier {
   @override
-  FutureOr<List<ShippingProduct>> build() {
-    return _fetchProducts();
-  }
-
-  Future<List<ShippingProduct>> _fetchProducts() async {
-    final repository = ref.read(shippingRepositoryProvider);
-    final result = await repository.getProducts().run();
+  Future<List<ShippingProduct>> build() async {
+    final dio = ref.watch(dioProvider);
+    final repo = ShippingRepositoryImpl(dio);
+    
+    final result = await repo.getShippingProducts();
     
     return result.fold(
-      (failure) => throw failure.message ?? 'Unknown error',
+      (failure) => throw failure.message ?? "Errore sconosciuto",
       (products) => products,
     );
   }
 
-  Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => _fetchProducts());
+  Future<ShippingProduct?> getProductById(String id) async {
+    final dio = ref.watch(dioProvider);
+    final repo = ShippingRepositoryImpl(dio);
+    
+    final result = await repo.getProductById(id);
+    
+    return result.fold(
+      (failure) => throw failure.message ?? "Errore nel caricamento del prodotto",
+      (product) => product,
+    );
   }
-}
-
-@riverpod
-Future<List<ShippingCategory>> shippingCategories(Ref ref) async {
-  final repository = ref.read(shippingRepositoryProvider);
-  final result = await repository.getCategories().run();
-  
-  return result.fold(
-    (failure) => throw failure.message ?? 'Unknown error',
-    (categories) => categories,
-  );
 }

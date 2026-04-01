@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:emanuel_pizzeria/core/theme.dart';
+import 'package:emanuel_pizzeria/src/core/theme/app_theme.dart';
 
 class TrustSection extends StatelessWidget {
   const TrustSection({super.key});
@@ -8,9 +8,7 @@ class TrustSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-      ),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Wrap(
         alignment: WrapAlignment.center,
         spacing: 48,
@@ -54,17 +52,9 @@ class _TrustItem extends StatelessWidget {
       width: 280,
       child: Column(
         children: [
-          Icon(
-            icon,
-            size: 48,
-            color: AppTheme.secondary,
-          ),
+          Icon(icon, size: 48, color: AppTheme.secondary),
           const SizedBox(height: 16),
-          Text(
-            title,
-            style: AppTheme.menuTitle,
-            textAlign: TextAlign.center,
-          ),
+          Text(title, style: AppTheme.menuTitle, textAlign: TextAlign.center),
           const SizedBox(height: 8),
           Text(
             description,

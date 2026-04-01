@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../core/theme.dart';
+import 'package:emanuel_pizzeria/src/core/theme/app_theme.dart';
 
 class MapSection extends StatefulWidget {
   const MapSection({super.key});
@@ -19,7 +19,8 @@ class _MapSectionState extends State<MapSection> {
 
   Future<void> _openExternalMaps() async {
     final Uri googleMapsUrl = Uri.parse(
-        "https://www.google.com/maps/search/?api=1&query=${_pizzeriaLocation.latitude},${_pizzeriaLocation.longitude}");
+      "https://www.google.com/maps/search/?api=1&query=${_pizzeriaLocation.latitude},${_pizzeriaLocation.longitude}",
+    );
 
     try {
       if (await canLaunchUrl(googleMapsUrl)) {
@@ -37,8 +38,10 @@ class _MapSectionState extends State<MapSection> {
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border.symmetric(
-          horizontal:
-              BorderSide(color: AppTheme.gold.withValues(alpha: 0.3), width: 1),
+          horizontal: BorderSide(
+            color: AppTheme.pGold.withValues(alpha: 0.3),
+            width: 1,
+          ),
         ),
       ),
       child: Stack(
@@ -48,7 +51,7 @@ class _MapSectionState extends State<MapSection> {
               initialCenter: _pizzeriaLocation,
               initialZoom: 16.5,
               interactionOptions: InteractionOptions(
-                flags: _isInteracting 
+                flags: _isInteracting
                     ? (InteractiveFlag.all & ~InteractiveFlag.rotate)
                     : InteractiveFlag.none,
               ),
@@ -70,9 +73,10 @@ class _MapSectionState extends State<MapSection> {
                       size: 45,
                       shadows: [
                         Shadow(
-                            color: Colors.black26,
-                            blurRadius: 10,
-                            offset: Offset(0, 5))
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
+                        ),
                       ],
                     ),
                   ),
@@ -89,14 +93,20 @@ class _MapSectionState extends State<MapSection> {
                   color: Colors.black.withValues(alpha: 0.1),
                   child: Center(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
                         "Clicca per attivare la mappa",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -111,8 +121,11 @@ class _MapSectionState extends State<MapSection> {
               backgroundColor: Colors.white,
               elevation: 4,
               onPressed: _openExternalMaps,
-              child: const Icon(Icons.open_in_new,
-                  color: AppTheme.accent, size: 20),
+              child: const Icon(
+                Icons.open_in_new,
+                color: AppTheme.pAccent,
+                size: 20,
+              ),
             ),
           ),
         ],

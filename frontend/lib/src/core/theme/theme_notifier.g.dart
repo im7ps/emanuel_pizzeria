@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cart_notifier.dart';
+part of 'theme_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,50 +9,50 @@ part of 'cart_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Cart)
-final cartProvider = CartProvider._();
+@ProviderFor(ThemeMood)
+final themeMoodProvider = ThemeMoodProvider._();
 
-final class CartProvider extends $NotifierProvider<Cart, List<CartItem>> {
-  CartProvider._()
+final class ThemeMoodProvider extends $NotifierProvider<ThemeMood, AppMood> {
+  ThemeMoodProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'cartProvider',
-        isAutoDispose: false,
+        name: r'themeMoodProvider',
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$cartHash();
+  String debugGetCreateSourceHash() => _$themeMoodHash();
 
   @$internal
   @override
-  Cart create() => Cart();
+  ThemeMood create() => ThemeMood();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<CartItem> value) {
+  Override overrideWithValue(AppMood value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<CartItem>>(value),
+      providerOverride: $SyncValueProvider<AppMood>(value),
     );
   }
 }
 
-String _$cartHash() => r'8b4be514633e7268a5c172ec2523cc8f2f76f934';
+String _$themeMoodHash() => r'33056dedca6b72a0a529180e35b7a28fa61ab505';
 
-abstract class _$Cart extends $Notifier<List<CartItem>> {
-  List<CartItem> build();
+abstract class _$ThemeMood extends $Notifier<AppMood> {
+  AppMood build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<List<CartItem>, List<CartItem>>;
+    final ref = this.ref as $Ref<AppMood, AppMood>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<CartItem>, List<CartItem>>,
-              List<CartItem>,
+              AnyNotifier<AppMood, AppMood>,
+              AppMood,
               Object?,
               Object?
             >;

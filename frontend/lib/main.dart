@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'core/theme.dart';
-import 'core/router.dart';
+import 'src/core/theme/app_theme.dart';
+import 'src/core/theme/theme_notifier.dart';
+import 'src/routing/app_router.dart';
 
 void main() {
   runApp(
@@ -12,16 +13,20 @@ void main() {
   );
 }
 
-class EmanuelPizzeriaApp extends StatelessWidget {
+class EmanuelPizzeriaApp extends ConsumerWidget {
   const EmanuelPizzeriaApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mood = ref.watch(themeMoodProvider);
+    
     return MaterialApp.router(
       title: 'Emanuel Pizzeria',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      routerConfig: router,
+      theme: mood == AppMood.pizzeria 
+          ? AppTheme.getPizzeriaTheme() 
+          : AppTheme.getShopTheme(),
+      routerConfig: appRouter,
       builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         breakpoints: [

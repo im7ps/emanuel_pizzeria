@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme.dart';
-import '../../../../core/widgets/navbar.dart';
-import '../../../../core/widgets/footer.dart';
-import '../../domain/models/menu_models.dart';
-import '../providers/cart_notifier.dart';
+import 'package:emanuel_pizzeria/src/core/theme/app_theme.dart';
+import 'package:emanuel_pizzeria/src/core/theme/theme_notifier.dart';
+import 'package:emanuel_pizzeria/src/features/cart/presentation/pizzeria_cart_notifier.dart';
+import 'package:emanuel_pizzeria/src/features/cart/presentation/shop_cart_notifier.dart';
+import 'package:emanuel_pizzeria/features/menu/domain/models/menu_models.dart';
+import 'package:emanuel_pizzeria/src/shared/widgets/magazine_navbar.dart';
+import 'package:emanuel_pizzeria/src/shared/widgets/magazine_footer.dart';
 
 class CheckoutPage extends ConsumerStatefulWidget {
   const CheckoutPage({super.key});
@@ -20,16 +22,20 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = ref.watch(cartProvider);
-    final cartType = ref.read(cartProvider.notifier).cartType;
-    final total = ref.read(cartProvider.notifier).totalCartPrice;
+    final mood = ref.watch(themeMoodProvider);
+    final isPizzeria = mood == AppMood.pizzeria;
+
+    final cart = isPizzeria
+        ? ref.watch(pizzeriaCartProvider)
+        : ref.watch(shopCartProvider);
+
+    final total = isPizzeria
+        ? ref.watch(pizzeriaCartProvider.notifier).totalCartPrice
+        : ref.watch(shopCartProvider.notifier).totalCartPrice;
 
     if (cart.isEmpty) {
       return Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(100),
-          child: Navbar(),
-        ),
+        appBar: const MagazineNavbar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -37,8 +43,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
               const Text("IL TUO CARRELLO È VUOTO"),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () => context.go('/menu'),
-                child: const Text("TORNA AL MENÙ"),
+                onPressed: () => context.go(isPizzeria ? '/pizzeria' : '/shop'),
+                child: const Text("TORNA ALLO SHOP"),
               ),
             ],
           ),
@@ -47,10 +53,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     }
 
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Navbar(),
-      ),
+      appBar: const MagazineNavbar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -61,89 +64,99 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                 children: [
                   Text(
                     "RIEPILOGO ORDINE",
-                    style: AppTheme.menuCategoryTitle,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                   const SizedBox(height: 40),
-                  _buildRecapList(cart),
+                  _buildRecapList(cart, isPizzeria),
                   const Divider(height: 60),
-                  if (cartType == ProductType.local) _buildLocalOptions(),
-                  if (cartType == ProductType.shipping) _buildShippingForm(),
+                  if (isPizzeria) _buildLocalOptions(isPizzeria),
+                  if (!isPizzeria) _buildShippingForm(),
                   const SizedBox(height: 40),
-                  _buildFinalTotal(total),
+                  _buildFinalTotal(total, isPizzeria),
                   const SizedBox(height: 40),
-                  _buildActionButton(cartType),
+                  _buildActionButton(isPizzeria),
                 ],
               ),
             ),
-            const SizedBox(height: 100),
-            const Footer(),
+            const MagazineFooter(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRecapList(List<CartItem> cart) {
+  Widget _buildRecapList(List<CartItem> cart, bool isPizzeria) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.cardBg.withValues(alpha: 0.5),
+        color: (isPizzeria ? AppTheme.pAccent : AppTheme.sAccent).withValues(
+          alpha: 0.05,
+        ),
         borderRadius: BorderRadius.circular(15),
       ),
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: cart.length,
-        separatorBuilder: (context, index) => const Divider(indent: 20, endIndent: 20),
+        separatorBuilder: (context, index) =>
+            const Divider(indent: 20, endIndent: 20),
         itemBuilder: (context, index) {
           final item = cart[index];
           return ListTile(
-            title: Text(item.product.name, style: AppTheme.menuTitle.copyWith(fontSize: 18)),
-            subtitle: Text("${item.quantity}x", style: AppTheme.menuIngredients),
-            trailing: Text("€ ${item.totalPrice.toStringAsFixed(2)}", style: AppTheme.menuPrice),
+            title: Text(
+              item.product.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text("${item.quantity}x"),
+            trailing: Text(
+              "€ ${item.totalPrice.toStringAsFixed(2)}",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildLocalOptions() {
+  Widget _buildLocalOptions(bool isPizzeria) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _optionChip("MANGIA QUI", 'eat_here'),
+            _optionChip("MANGIA QUI", 'eat_here', isPizzeria),
             const SizedBox(width: 20),
-            _optionChip("DELIVERY / ASPORTO", 'delivery'),
+            _optionChip("DELIVERY / ASPORTO", 'delivery', isPizzeria),
           ],
         ),
         const SizedBox(height: 40),
         if (_localOption == 'delivery') _buildDeliveryForm(),
-        if (_localOption == 'eat_here') 
-          Padding(
-            padding: const EdgeInsets.all(20),
+        if (_localOption == 'eat_here')
+          const Padding(
+            padding: EdgeInsets.all(20),
             child: Text(
               "Per consumare al tavolo, ti invitiamo a effettuare una prenotazione. "
               "Il tuo ordine verrà visualizzato dallo staff quando arriverai.",
               textAlign: TextAlign.center,
-              style: AppTheme.menuIngredients,
             ),
           ),
       ],
     );
   }
 
-  Widget _optionChip(String label, String value) {
+  Widget _optionChip(String label, String value, bool isPizzeria) {
     bool isSelected = _localOption == value;
+    final accent = isPizzeria ? AppTheme.pAccent : AppTheme.sAccent;
     return ChoiceChip(
       label: Text(label),
       selected: isSelected,
       onSelected: (val) {
         if (val) setState(() => _localOption = value);
       },
-      selectedColor: AppTheme.accent,
+      selectedColor: accent,
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : AppTheme.text,
+        color: isSelected
+            ? Colors.white
+            : (isPizzeria ? AppTheme.pText : AppTheme.sText),
         fontWeight: FontWeight.bold,
       ),
     );
@@ -173,7 +186,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
       key: _formKey,
       child: Column(
         children: [
-          const Text("DATI PER LA SPEDIZIONE NAZIONALE", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text(
+            "DATI PER LA SPEDIZIONE NAZIONALE",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 20),
           _buildTextField("NOME E COGNOME"),
           const SizedBox(height: 16),
@@ -204,24 +220,35 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     );
   }
 
-  Widget _buildFinalTotal(double total) {
+  Widget _buildFinalTotal(double total, bool isPizzeria) {
+    final accent = isPizzeria ? AppTheme.pAccent : AppTheme.sAccent;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("TOTALE DA PAGARE", style: AppTheme.menuTitle.copyWith(fontSize: 22)),
-        Text("€ ${total.toStringAsFixed(2)}", style: AppTheme.menuPrice.copyWith(fontSize: 32, color: AppTheme.accent)),
+        const Text(
+          "TOTALE DA PAGARE",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          "€ ${total.toStringAsFixed(2)}",
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: accent,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildActionButton(ProductType? type) {
-    if (type == ProductType.local && _localOption == 'eat_here') {
+  Widget _buildActionButton(bool isPizzeria) {
+    if (isPizzeria && _localOption == 'eat_here') {
       return SizedBox(
         width: double.infinity,
         height: 60,
         child: ElevatedButton(
-          onPressed: () => context.push('/bookings'),
-          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.secondary),
+          onPressed: () => context.push('/pizzeria/bookings'),
+          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.pSecondary),
           child: const Text("VAI ALLA PRENOTAZIONE TAVOLO"),
         ),
       );

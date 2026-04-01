@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/theme.dart';
+import '../../../../src/core/theme/app_theme.dart';
 
 class StorytellingSection extends StatelessWidget {
   const StorytellingSection({super.key});
@@ -13,7 +13,7 @@ class StorytellingSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 140, horizontal: 24),
-      color: AppTheme.background,
+      color: AppTheme.sBackground,
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
@@ -31,9 +31,12 @@ class StorytellingSection extends StatelessWidget {
                       Expanded(flex: 1, child: _buildStoryImage()),
                       const SizedBox(width: 80),
                       Expanded(
-                          flex: 1,
-                          child: _buildStoryText(context,
-                              textAlign: TextAlign.start)),
+                        flex: 1,
+                        child: _buildStoryText(
+                          context,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -52,7 +55,7 @@ class StorytellingSection extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.text.withValues(alpha: 0.1),
+            color: AppTheme.sText.withValues(alpha: 0.1),
             blurRadius: 30,
             offset: const Offset(0, 20),
           ),
@@ -71,7 +74,7 @@ class StorytellingSection extends StatelessWidget {
         Text(
           "LA NOSTRA STORIA",
           style: GoogleFonts.playfairDisplay(
-            color: AppTheme.accent,
+            color: AppTheme.sAccent,
             letterSpacing: 4,
             fontWeight: FontWeight.w900,
             fontSize: 18,
@@ -84,12 +87,12 @@ class StorytellingSection extends StatelessWidget {
           style: GoogleFonts.playfairDisplay(
             fontSize: 34,
             fontStyle: FontStyle.italic,
-            color: AppTheme.text,
+            color: AppTheme.sText,
             height: 1.6,
           ),
         ),
         const SizedBox(height: 40),
-        const Icon(Icons.star, color: AppTheme.secondary, size: 30),
+        const Icon(Icons.star, color: AppTheme.sSecondary, size: 30),
       ],
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:emanuel_pizzeria/core/theme.dart';
+import 'package:emanuel_pizzeria/src/core/theme/app_theme.dart';
 
 class FAQSection extends StatelessWidget {
   const FAQSection({super.key});

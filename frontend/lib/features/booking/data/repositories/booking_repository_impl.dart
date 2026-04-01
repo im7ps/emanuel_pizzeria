@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/failure.dart';
+import '../../../../src/core/failure/failure.dart';
 import '../../domain/models/booking_models.dart';
 
 abstract class BookingRepository {
@@ -11,25 +11,19 @@ abstract class BookingRepository {
 class BookingRepositoryImpl implements BookingRepository {
   @override
   TaskEither<Failure, List<TableModel>> getTables() {
-    return TaskEither.tryCatch(
-      () async {
-        await Future.delayed(const Duration(milliseconds: 800));
-        return _mockTables;
-      },
-      (error, stackTrace) => Failure.unknownError(message: error.toString()),
-    );
+    return TaskEither.tryCatch(() async {
+      await Future.delayed(const Duration(milliseconds: 800));
+      return _mockTables;
+    }, (error, stackTrace) => Failure.unknownError(message: error.toString()));
   }
 
   @override
   TaskEither<Failure, bool> bookTable(BookingReservation reservation) {
-    return TaskEither.tryCatch(
-      () async {
-        await Future.delayed(const Duration(seconds: 1));
-        // In a real scenario, this would call the API
-        return true;
-      },
-      (error, stackTrace) => Failure.unknownError(message: error.toString()),
-    );
+    return TaskEither.tryCatch(() async {
+      await Future.delayed(const Duration(seconds: 1));
+      // In a real scenario, this would call the API
+      return true;
+    }, (error, stackTrace) => Failure.unknownError(message: error.toString()));
   }
 
   final List<TableModel> _mockTables = [

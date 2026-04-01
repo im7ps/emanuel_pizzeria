@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/theme.dart';
+import '../../../../src/core/theme/app_theme.dart';
 
 class SoulCard extends StatelessWidget {
   final String title;
@@ -28,9 +28,11 @@ class SoulCard extends StatelessWidget {
           width: isMobile ? 320 : 360,
           height: isMobile ? 480 : 540,
           decoration: BoxDecoration(
-            color: AppTheme.background,
+            color: AppTheme.pBackground,
             border: Border.all(
-                color: AppTheme.secondary.withValues(alpha: 0.3), width: 1),
+              color: AppTheme.pSecondary.withValues(alpha: 0.3),
+              width: 1,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,41 +53,40 @@ class SoulCard extends StatelessWidget {
                     children: [
                       Text(
                         title.toUpperCase(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall
+                        style: Theme.of(context).textTheme.displaySmall
                             ?.copyWith(
-                                fontSize: 22,
-                                letterSpacing: 2,
-                                fontWeight: FontWeight.bold),
+                              fontSize: 22,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 15),
                       const Divider(
-                          color: AppTheme.accent,
-                          thickness: 1.5,
-                          indent: 40,
-                          endIndent: 40),
+                        color: AppTheme.pAccent,
+                        thickness: 1.5,
+                        indent: 40,
+                        endIndent: 40,
+                      ),
                       const SizedBox(height: 15),
                       Expanded(
                         child: Text(
                           description,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                  fontSize: 16,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.text,
-                                  overflow: TextOverflow.fade),
+                                fontSize: 16,
+                                height: 1.5,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.pText,
+                                overflow: TextOverflow.fade,
+                              ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       Text(
                         "SCOPRI DI PIÙ →",
                         style: GoogleFonts.playfairDisplay(
-                          color: AppTheme.accent,
+                          color: AppTheme.pAccent,
                           fontWeight: FontWeight.w900,
                           fontSize: 14,
                           letterSpacing: 1.5,

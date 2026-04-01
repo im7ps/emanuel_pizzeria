@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import '../theme.dart';
+import 'package:emanuel_pizzeria/src/core/theme/app_theme.dart';
 import 'app_buttons.dart';
 
 class Footer extends StatelessWidget {
@@ -48,7 +48,7 @@ class Footer extends StatelessWidget {
                       child: Text(
                         "EMANUEL PIZZERIA",
                         style: GoogleFonts.playfairDisplay(
-                          color: AppTheme.gold,
+                          color: AppTheme.pGold,
                           fontSize: isMobile ? 20 : 24,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 4,
@@ -58,10 +58,11 @@ class Footer extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       "Passione del Sud, direttamente\nnel tuo piatto.",
-                      textAlign:
-                          !useColumn ? TextAlign.start : TextAlign.center,
+                      textAlign: !useColumn
+                          ? TextAlign.start
+                          : TextAlign.center,
                       style: GoogleFonts.merriweather(
-                        color: AppTheme.text.withValues(alpha: 0.6),
+                        color: AppTheme.pText.withValues(alpha: 0.6),
                         fontSize: isMobile ? 12 : 13,
                         height: 1.6,
                       ),
@@ -99,17 +100,20 @@ class Footer extends StatelessWidget {
                   fontSize: isMobile ? 16 : 18,
                   children: [
                     _FooterHourRow(
-                        day: "Lun - Gio",
-                        hours: "19:00 - 23:30",
-                        isMobile: isMobile),
+                      day: "Lun - Gio",
+                      hours: "19:00 - 23:30",
+                      isMobile: isMobile,
+                    ),
                     _FooterHourRow(
-                        day: "Ven - Sab",
-                        hours: "19:00 - 00:30",
-                        isMobile: isMobile),
+                      day: "Ven - Sab",
+                      hours: "19:00 - 00:30",
+                      isMobile: isMobile,
+                    ),
                     _FooterHourRow(
-                        day: "Domenica",
-                        hours: "19:00 - 23:30",
-                        isMobile: isMobile),
+                      day: "Domenica",
+                      hours: "19:00 - 23:30",
+                      isMobile: isMobile,
+                    ),
                   ],
                 ),
               ),
@@ -143,13 +147,13 @@ class Footer extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 40),
-          Divider(color: AppTheme.text.withValues(alpha: 0.1), thickness: 1),
+          Divider(color: AppTheme.pText.withValues(alpha: 0.1), thickness: 1),
           const SizedBox(height: 20),
           Text(
             "© 2024 Emanuel Pizzeria. Tutti i diritti riservati.",
             textAlign: TextAlign.center,
             style: GoogleFonts.merriweather(
-              color: AppTheme.text.withValues(alpha: 0.4),
+              color: AppTheme.pText.withValues(alpha: 0.4),
               fontSize: isMobile ? 10 : 11,
             ),
           ),
@@ -176,8 +180,9 @@ class _FooterSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment:
-          isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment: isDesktop
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
         if (title != null) ...[
           FittedBox(
@@ -185,7 +190,7 @@ class _FooterSection extends StatelessWidget {
             child: Text(
               title!,
               style: GoogleFonts.playfairDisplay(
-                color: AppTheme.accent,
+                color: AppTheme.pAccent,
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2,
@@ -205,8 +210,11 @@ class _FooterHourRow extends StatelessWidget {
   final String hours;
   final bool isMobile;
 
-  const _FooterHourRow(
-      {required this.day, required this.hours, required this.isMobile});
+  const _FooterHourRow({
+    required this.day,
+    required this.hours,
+    required this.isMobile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +227,7 @@ class _FooterHourRow extends StatelessWidget {
           Text(
             "$day: ",
             style: GoogleFonts.merriweather(
-              color: AppTheme.text.withValues(alpha: 0.8),
+              color: AppTheme.pText.withValues(alpha: 0.8),
               fontSize: isMobile ? 12 : 13,
               fontWeight: FontWeight.bold,
             ),
@@ -227,7 +235,7 @@ class _FooterHourRow extends StatelessWidget {
           Text(
             hours,
             style: GoogleFonts.merriweather(
-              color: AppTheme.text.withValues(alpha: 0.6),
+              color: AppTheme.pText.withValues(alpha: 0.6),
               fontSize: isMobile ? 12 : 13,
             ),
           ),
@@ -242,8 +250,11 @@ class _FooterContactRow extends StatelessWidget {
   final String label;
   final bool isMobile;
 
-  const _FooterContactRow(
-      {required this.icon, required this.label, required this.isMobile});
+  const _FooterContactRow({
+    required this.icon,
+    required this.label,
+    required this.isMobile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -252,13 +263,13 @@ class _FooterContactRow extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppTheme.gold, size: isMobile ? 16 : 18),
+          Icon(icon, color: AppTheme.pGold, size: isMobile ? 16 : 18),
           const SizedBox(width: 10),
           Flexible(
             child: Text(
               label,
               style: GoogleFonts.merriweather(
-                color: AppTheme.text.withValues(alpha: 0.6),
+                color: AppTheme.pText.withValues(alpha: 0.6),
                 fontSize: isMobile ? 12 : 13,
               ),
               overflow: TextOverflow.ellipsis,

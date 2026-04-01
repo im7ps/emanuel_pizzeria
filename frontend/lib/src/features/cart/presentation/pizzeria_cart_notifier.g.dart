@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cart_notifier.dart';
+part of 'pizzeria_cart_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,27 +9,28 @@ part of 'cart_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Cart)
-final cartProvider = CartProvider._();
+@ProviderFor(PizzeriaCart)
+final pizzeriaCartProvider = PizzeriaCartProvider._();
 
-final class CartProvider extends $NotifierProvider<Cart, List<CartItem>> {
-  CartProvider._()
+final class PizzeriaCartProvider
+    extends $NotifierProvider<PizzeriaCart, List<CartItem>> {
+  PizzeriaCartProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'cartProvider',
+        name: r'pizzeriaCartProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$cartHash();
+  String debugGetCreateSourceHash() => _$pizzeriaCartHash();
 
   @$internal
   @override
-  Cart create() => Cart();
+  PizzeriaCart create() => PizzeriaCart();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(List<CartItem> value) {
@@ -40,9 +41,9 @@ final class CartProvider extends $NotifierProvider<Cart, List<CartItem>> {
   }
 }
 
-String _$cartHash() => r'8b4be514633e7268a5c172ec2523cc8f2f76f934';
+String _$pizzeriaCartHash() => r'21d2acdf0598439368576d737a947bdd31e661fc';
 
-abstract class _$Cart extends $Notifier<List<CartItem>> {
+abstract class _$PizzeriaCart extends $Notifier<List<CartItem>> {
   List<CartItem> build();
   @$mustCallSuper
   @override

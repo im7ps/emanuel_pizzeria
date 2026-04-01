@@ -28,3 +28,4 @@ postgres_data/
 # Alembic
 alembic/versions/
 !alembic/versions/.keep
+.aider*

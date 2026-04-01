@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../core/theme.dart';
-import '../../../../core/widgets/hover_button.dart';
+import '../../../../src/core/theme/app_theme.dart';
+// import '../../../../core/widgets/hover_button.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -53,7 +52,7 @@ class HeroSection extends StatelessWidget {
                           style: GoogleFonts.cinzel(
                             fontSize: isMobile ? 28 : 58,
                             fontWeight: FontWeight.w900,
-                            color: AppTheme.gold,
+                            color: AppTheme.pGold,
                             height: 1.0,
                             letterSpacing: isMobile ? 2 : 4,
                             shadows: [
@@ -96,28 +95,28 @@ class HeroSection extends StatelessWidget {
   }
 }
 
-class _ResponsiveHeroButton extends StatelessWidget {
-  final String label;
-  final Color baseColor;
-  final bool isMobile;
-  final VoidCallback onPressed;
+// class _ResponsiveHeroButton extends StatelessWidget {
+//   final String label;
+//   final Color baseColor;
+//   final bool isMobile;
+//   final VoidCallback onPressed;
 
-  const _ResponsiveHeroButton({
-    required this.label,
-    required this.baseColor,
-    required this.isMobile,
-    required this.onPressed,
-  });
+//   const _ResponsiveHeroButton({
+//     required this.label,
+//     required this.baseColor,
+//     required this.isMobile,
+//     required this.onPressed,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: isMobile ? double.infinity : 280,
-      child: HoverButton(
-        label: label,
-        baseColor: baseColor,
-        onPressed: onPressed,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: isMobile ? double.infinity : 280,
+//       child: HoverButton(
+//         label: label,
+//         baseColor: baseColor,
+//         onPressed: onPressed,
+//       ),
+//     );
+//   }
+// }

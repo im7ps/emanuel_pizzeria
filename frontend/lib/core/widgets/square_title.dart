@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme.dart';
+import '../../src/core/theme/app_theme.dart';
 
 class SquareTitle extends StatelessWidget {
   final List<String> lines;
   final Color? color;
 
-  const SquareTitle({
-    super.key,
-    required this.lines,
-    this.color,
-  });
+  const SquareTitle({super.key, required this.lines, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +21,7 @@ class SquareTitle extends StatelessWidget {
             style: GoogleFonts.cinzel(
               height: 0.75,
               fontWeight: FontWeight.w900,
-              color: color ?? AppTheme.gold,
+              color: color ?? AppTheme.pGold,
               letterSpacing: -1,
               shadows: [
                 Shadow(

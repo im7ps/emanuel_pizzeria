@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme.dart';
-import '../../../../core/widgets/navbar.dart';
-import '../../../../core/widgets/footer.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:emanuel_pizzeria/src/core/theme/app_theme.dart';
+import 'package:emanuel_pizzeria/src/shared/widgets/magazine_navbar.dart';
+import 'package:emanuel_pizzeria/src/shared/widgets/magazine_footer.dart';
 
 class WorkWithUsPage extends StatelessWidget {
   const WorkWithUsPage({super.key});
@@ -9,45 +10,35 @@ class WorkWithUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Navbar(),
-      ),
+      appBar: const MagazineNavbar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 300,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppTheme.accent,
-                image: const DecorationImage(
-                  image: AssetImage("assets/images/bookings/bookings_background.jpg"),
-                  fit: BoxFit.cover,
-                  opacity: 0.3,
-                ),
-              ),
-              child: const Center(
-                child: Text(
-                  "LAVORA CON NOI",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 4,
+            const SizedBox(height: 120),
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: [
+                  Text(
+                    "LAVORA CON NOI",
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.pAccent,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  Container(height: 2, width: 60, color: AppTheme.pGold),
+                  const SizedBox(height: 60),
+                  const Text(
+                    "Sei appassionato di cucina tradizionale? Vuoi unirti al team di Emanuel?\nInviaci il tuo CV a: career@emanuelpizzeria.it",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, height: 2),
+                  ),
+                ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(40.0),
-              child: Text(
-                "Inviaci il tuo CV a: job@emanuelpizzeria.it\n\nPosizioni aperte:\n- Pizzaiolo esperto\n- Cameriere/a di sala\n- Addetto alle consegne",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            const Footer(),
+            const MagazineFooter(),
           ],
         ),
       ),
